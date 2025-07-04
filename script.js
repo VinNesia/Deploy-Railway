@@ -1,17 +1,21 @@
-// Initialize Highlight.js and EmailJS
+// Initialize Highlight.js
 document.addEventListener('DOMContentLoaded', () => {
     hljs.highlightAll();
-    emailjs.init('aLROwrpQv9KqLSs96');
-    loadHistory();
     loadTheme();
     setupDragAndDrop();
     setupKeyboardShortcuts();
     updateTime();
     setInterval(updateTime, 60000); // Update time every minute
+    loadHistory();
+    checkScriptLoaded();
 });
 
-// Supabase Client
-const supabase = Supabase.createClient('YOUR_SUPABASE_URL', 'YOUR_SUPABASE_ANON_KEY');
+// Check if script loaded successfully
+function checkScriptLoaded() {
+    if (typeof hljs === 'undefined') {
+        alert('JavaScript failed to load. Please refresh the page.');
+    }
+}
 
 // Toggle menu for mobile
 document.querySelector('.menu-toggle').addEventListener('click', () => {
@@ -67,16 +71,18 @@ function setupDragAndDrop() {
     textareaWrapper.addEventListener('drop', (e) => {
         const file = e.dataTransfer.files[0];
         if (file && file.type === 'application/json') {
-            if (file.size > 10485760) { // 10MB limit
-                alert('File size exceeds 10MB limit.');
+            if (file.size > MAX_INPUT_SIZE) {
+                alert('File size exceeds 5MB limit.');
                 return;
             }
+            showLoading();
             const reader = new FileReader();
             reader.onload = (ev) => {
                 const input = ev.target.result;
                 textarea.value = input;
                 saveInputState(input);
                 beautifyJSON();
+                hideLoading();
             };
             reader.readAsText(file);
         } else {
@@ -101,6 +107,7 @@ function setupKeyboardShortcuts() {
 }
 
 // Undo/Redo state
+const MAX_INPUT_SIZE = 5242880; // 5MB
 let inputHistory = [];
 let historyIndex = -1;
 
@@ -116,7 +123,7 @@ function saveInputState(input) {
     }
 }
 
-// JSON History
+// JSON History (using localStorage)
 let jsonHistory = JSON.parse(localStorage.getItem('jsonHistory')) || [];
 
 function saveHistory(json) {
@@ -149,7 +156,50 @@ document.getElementById('historySelect').addEventListener('change', function () 
     }
 });
 
+// Loading Indicators
+function showLoading() {
+    document.getElementById('jsonOutput').innerHTML = '<div class="spinner">Loading...</div>';
+}
+
+function hideLoading() {
+    const spinner = document.querySelector('.spinner');
+    if (spinner) spinner.remove();
+}
+
 // JSON Analysis
+function analyzeJSONDetail() {
+    showLoading();
+    const input = document.getElementById('jsonInput').value.trim();
+    const analysis = document.getElementById('jsonAnalysis');
+
+    if (!input) {
+        analysis.textContent = 'Error: JSON input is empty.';
+        analysis.className = 'error';
+        hideLoading();
+        return;
+    }
+
+    if (new TextEncoder().encode(input).length > MAX_INPUT_SIZE) {
+        analysis.textContent = 'Error: Input exceeds 5MB limit.';
+        analysis.className = 'error';
+        hideLoading();
+        return;
+    }
+
+    try {
+        const parsed = JSON.parse(input);
+        const stats = analyzeJSON(input);
+        let analysisText = `<strong>JSON Analysis:</strong><br>${stats}<br><br>`;
+        analysisText += generateVisualization(parsed);
+        analysis.innerHTML = analysisText;
+        analysis.className = '';
+    } catch (error) {
+        analysis.textContent = `Error: ${error.message}. Suggestion: ${suggestFix(error)}`;
+        analysis.className = 'error';
+    }
+    hideLoading();
+}
+
 function analyzeJSON(json) {
     const startTime = performance.now();
     try {
@@ -188,9 +238,34 @@ function analyzeJSON(json) {
 
         traverse(parsed);
         const endTime = performance.now();
-        return `Stats: ${stats.totalKeys} keys, ${stats.nestedLevels} levels, ${stats.arrays} arrays, ${stats.objects} objects, ${stats.strings} strings, ${stats.numbers} numbers, ${stats.booleans} booleans, ${stats.nulls} nulls, ${stats.size} bytes, Parsed in ${Math.round(endTime - startTime)}ms`;
+        return `Keys: ${stats.totalKeys}, Levels: ${stats.nestedLevels}, Arrays: ${stats.arrays}, Objects: ${stats.objects}, Strings: ${stats.strings}, Numbers: ${stats.numbers}, Booleans: ${stats.booleans}, Nulls: ${stats.nulls}, Size: ${stats.size} bytes, Parse Time: ${Math.round(endTime - startTime)}ms`;
     } catch {
         return 'Unable to analyze: Invalid JSON';
+    }
+}
+
+function generateVisualization(json) {
+    try {
+        const parsed = JSON.parse(json);
+        let viz = '<strong>Structure Visualization:</strong><br>';
+        function visualize(obj, indent = 0) {
+            if (Array.isArray(obj)) {
+                viz += ' '.repeat(indent) + `- Array[${obj.length}]<br>`;
+                obj.forEach(item => visualize(item, indent + 2));
+            } else if (typeof obj === 'object' && obj !== null) {
+                viz += ' '.repeat(indent) + `- Object[${Object.keys(obj).length}]<br>`;
+                Object.entries(obj).forEach(([key, value]) => {
+                    viz += ' '.repeat(indent + 2) + `${key}: `;
+                    visualize(value, indent + 4);
+                });
+            } else {
+                viz += ' '.repeat(indent) + `- ${typeof obj}: ${obj}<br>`;
+            }
+        }
+        visualize(parsed);
+        return viz;
+    } catch {
+        return 'Visualization failed: Invalid JSON';
     }
 }
 
@@ -216,133 +291,9 @@ function suggestFix(error) {
     return 'Review your JSON syntax for common issues.';
 }
 
-// GitHub Gist Integration
-async function saveToGist() {
-    const input = document.getElementById('jsonInput').value.trim();
-    const gistResult = document.getElementById('gistResult');
-
-    if (!input) {
-        gistResult.textContent = 'Error: JSON input is empty.';
-        gistResult.style.color = '#c53030';
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/save-json', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: input, type: 'gist' })
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            gistResult.innerHTML = `Gist saved! <a href="${data.html_url}" target="_blank">View Gist</a>`;
-            gistResult.style.color = '#2f855a';
-        } else {
-            gistResult.textContent = `Error: ${data.message || 'Failed to save Gist.'}`;
-            gistResult.style.color = '#c53030';
-        }
-    } catch (error) {
-        gistResult.textContent = `Error: ${error.message}. Suggestion: ${suggestFix(error)}`;
-        gistResult.style.color = '#c53030';
-    }
-}
-
-async function loadFromGist() {
-    const gistId = document.getElementById('gistId').value.trim();
-    const gistResult = document.getElementById('gistResult');
-    const textarea = document.getElementById('jsonInput');
-
-    if (!gistId) {
-        gistResult.textContent = 'Error: Please enter a Gist ID.';
-        gistResult.style.color = '#c53030';
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/load-json?gistId=${gistId}`);
-        const data = await response.json();
-        if (response.ok && data.content) {
-            textarea.value = data.content;
-            saveInputState(data.content);
-            beautifyJSON();
-            gistResult.textContent = 'Gist loaded successfully!';
-            gistResult.style.color = '#2f855a';
-        } else {
-            gistResult.textContent = `Error: ${data.message || 'No valid JSON found in Gist.'}`;
-            gistResult.style.color = '#c53030';
-        }
-    } catch (error) {
-        gistResult.textContent = `Error: ${error.message}`;
-        gistResult.style.color = '#c53030';
-    }
-}
-
-// Supabase Integration
-async function saveToDatabase() {
-    const input = document.getElementById('jsonInput').value.trim();
-    const dbResult = document.getElementById('dbResult');
-
-    if (!input) {
-        dbResult.textContent = 'Error: JSON input is empty.';
-        dbResult.style.color = '#c53030';
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/save-json', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: input, type: 'database' })
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            dbResult.innerHTML = `JSON saved to database! ID: ${data.id}`;
-            dbResult.style.color = '#2f855a';
-            saveHistory(input);
-        } else {
-            dbResult.textContent = `Error: ${data.message || 'Failed to save to database.'}`;
-            dbResult.style.color = '#c53030';
-        }
-    } catch (error) {
-        dbResult.textContent = `Error: ${error.message}. Suggestion: ${suggestFix(error)}`;
-        dbResult.style.color = '#c53030';
-    }
-}
-
-async function loadFromDatabase() {
-    const jsonId = document.getElementById('jsonId').value.trim();
-    const dbResult = document.getElementById('dbResult');
-    const textarea = document.getElementById('jsonInput');
-
-    if (!jsonId) {
-        dbResult.textContent = 'Error: Please enter a JSON ID.';
-        dbResult.style.color = '#c53030';
-        return;
-    }
-
-    try {
-        const response = await fetch(`/api/load-json?jsonId=${jsonId}`);
-        const data = await response.json();
-        if (response.ok && data.content) {
-            textarea.value = data.content;
-            saveInputState(data.content);
-            beautifyJSON();
-            dbResult.textContent = 'JSON loaded from database!';
-            dbResult.style.color = '#2f855a';
-        } else {
-            dbResult.textContent = `Error: ${data.message || 'No JSON found with this ID.'}`;
-            dbResult.style.color = '#c53030';
-        }
-    } catch (error) {
-        dbResult.textContent = `Error: ${error.message}`;
-        dbResult.style.color = '#c53030';
-    }
-}
-
 // Beautify JSON
 function beautifyJSON() {
+    showLoading();
     const input = document.getElementById('jsonInput').value.trim();
     const output = document.getElementById('jsonOutput');
     const validationResult = document.getElementById('validationResult');
@@ -355,14 +306,16 @@ function beautifyJSON() {
         validationResult.textContent = 'Error: JSON input is empty.';
         validationResult.className = 'error';
         stats.textContent = '';
+        hideLoading();
         return;
     }
 
-    if (new TextEncoder().encode(input).length > 10485760) { // 10MB limit
-        validationResult.textContent = 'Error: Input exceeds 10MB limit.';
+    if (new TextEncoder().encode(input).length > MAX_INPUT_SIZE) {
+        validationResult.textContent = 'Error: Input exceeds 5MB limit.';
         validationResult.className = 'error';
         output.textContent = '';
         stats.textContent = '';
+        hideLoading();
         return;
     }
 
@@ -384,10 +337,12 @@ function beautifyJSON() {
         validationResult.className = 'error';
         stats.textContent = '';
     }
+    hideLoading();
 }
 
 // Validate JSON
 function validateJSON() {
+    showLoading();
     const input = document.getElementById('jsonInput').value.trim();
     const validationResult = document.getElementById('validationResult');
     const stats = document.getElementById('jsonStats');
@@ -396,13 +351,15 @@ function validateJSON() {
         validationResult.textContent = 'Error: JSON input is empty.';
         validationResult.className = 'error';
         stats.textContent = '';
+        hideLoading();
         return;
     }
 
-    if (new TextEncoder().encode(input).length > 10485760) { // 10MB limit
-        validationResult.textContent = 'Error: Input exceeds 10MB limit.';
+    if (new TextEncoder().encode(input).length > MAX_INPUT_SIZE) {
+        validationResult.textContent = 'Error: Input exceeds 5MB limit.';
         validationResult.className = 'error';
         stats.textContent = '';
+        hideLoading();
         return;
     }
 
@@ -417,10 +374,12 @@ function validateJSON() {
         validationResult.className = 'error';
         stats.textContent = '';
     }
+    hideLoading();
 }
 
 // Compress JSON
 function compressJSON() {
+    showLoading();
     const input = document.getElementById('jsonInput').value.trim();
     const output = document.getElementById('jsonOutput');
     const validationResult = document.getElementById('validationResult');
@@ -432,14 +391,16 @@ function compressJSON() {
         validationResult.textContent = 'Error: JSON input is empty.';
         validationResult.className = 'error';
         stats.textContent = '';
+        hideLoading();
         return;
     }
 
-    if (new TextEncoder().encode(input).length > 10485760) { // 10MB limit
-        validationResult.textContent = 'Error: Input exceeds 10MB limit.';
+    if (new TextEncoder().encode(input).length > MAX_INPUT_SIZE) {
+        validationResult.textContent = 'Error: Input exceeds 5MB limit.';
         validationResult.className = 'error';
         output.textContent = '';
         stats.textContent = '';
+        hideLoading();
         return;
     }
 
@@ -460,42 +421,48 @@ function compressJSON() {
         validationResult.className = 'error';
         stats.textContent = '';
     }
+    hideLoading();
 }
 
 // Undo Input
 function undoInput() {
+    showLoading();
     if (historyIndex > 0 && inputHistory[historyIndex - 1]) {
         historyIndex--;
         document.getElementById('jsonInput').value = inputHistory[historyIndex] || '';
         beautifyJSON();
     }
+    hideLoading();
 }
 
 // Redo Input
 function redoInput() {
+    showLoading();
     if (historyIndex < inputHistory.length - 1 && inputHistory[historyIndex + 1]) {
         historyIndex++;
         document.getElementById('jsonInput').value = inputHistory[historyIndex] || '';
         beautifyJSON();
     }
+    hideLoading();
 }
 
 // Clear Input
 function clearInput() {
+    showLoading();
     document.getElementById('jsonInput').value = '';
     document.getElementById('jsonOutput').textContent = '';
     document.getElementById('validationResult').textContent = '';
-    document.getElementById('gistResult').textContent = '';
-    document.getElementById('dbResult').textContent = '';
+    document.getElementById('localResult').textContent = '';
     document.getElementById('jsonStats').textContent = '';
+    document.getElementById('jsonAnalysis').textContent = '';
     document.getElementById('historySelect').value = '';
     document.getElementById('jsonSearch').value = '';
-    document.getElementById('gistId').value = '';
-    document.getElementById('jsonId').value = '';
+    hideLoading();
 }
 
 // Copy Output
 function copyOutput() {
+    showLoading();
     const output = document.getElementById('jsonOutput').textContent;
     if (output) {
         if (navigator.clipboard) {
@@ -511,10 +478,12 @@ function copyOutput() {
     } else {
         alert('Nothing to copy!');
     }
+    hideLoading();
 }
 
 // Download JSON
 function downloadJSON() {
+    showLoading();
     const output = document.getElementById('jsonOutput').textContent;
     if (output) {
         const blob = new Blob([output], { type: 'application/json' });
@@ -527,14 +496,17 @@ function downloadJSON() {
     } else {
         alert('Nothing to download!');
     }
+    hideLoading();
 }
 
 // File Upload
 document.getElementById('jsonFile').addEventListener('change', function (event) {
+    showLoading();
     const file = event.target.files[0];
     if (file) {
-        if (file.size > 10485760) { // 10MB limit
-            alert('File size exceeds 10MB limit.');
+        if (file.size > MAX_INPUT_SIZE) {
+            alert('File size exceeds 5MB limit.');
+            hideLoading();
             return;
         }
         const reader = new FileReader();
@@ -543,6 +515,7 @@ document.getElementById('jsonFile').addEventListener('change', function (event) 
             document.getElementById('jsonInput').value = input;
             saveInputState(input);
             beautifyJSON();
+            hideLoading();
         };
         reader.readAsText(file);
     }
@@ -553,16 +526,100 @@ document.getElementById('jsonSearch').addEventListener('input', () => {
     beautifyJSON();
 });
 
-// EmailJS Feedback Form
-document.getElementById('contactForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    emailjs.send('service_zrumu1h', 'template_b3ayww4', {
-        user_email: document.getElementById('userEmail').value,
-        message: document.getElementById('message').value
-    }).then(() => {
-        alert('Feedback sent successfully!');
+// Save to Local Storage
+function saveToLocal() {
+    showLoading();
+    const input = document.getElementById('jsonInput').value.trim();
+    const localResult = document.getElementById('localResult');
+
+    if (!input) {
+        localResult.textContent = 'Error: JSON input is empty.';
+        localResult.className = 'error';
+        hideLoading();
+        return;
+    }
+
+    try {
+        JSON.parse(input); // Validate JSON
+        localStorage.setItem('jsonBackup', input);
+        localResult.textContent = 'JSON saved to local storage!';
+        localResult.className = 'success';
+        saveHistory(input);
+    } catch (error) {
+        localResult.textContent = `Error: ${error.message}. Suggestion: ${suggestFix(error)}`;
+        localResult.className = 'error';
+    }
+    hideLoading();
+}
+
+// Load from Local Storage
+function loadFromLocal() {
+    showLoading();
+    const input = localStorage.getItem('jsonBackup');
+    const localResult = document.getElementById('localResult');
+    const textarea = document.getElementById('jsonInput');
+
+    if (!input) {
+        localResult.textContent = 'Error: No JSON found in local storage.';
+        localResult.className = 'error';
+        hideLoading();
+        return;
+    }
+
+    try {
+        JSON.parse(input); // Validate JSON
+        textarea.value = input;
+        saveInputState(input);
+        beautifyJSON();
+        localResult.textContent = 'JSON loaded from local storage!';
+        localResult.className = 'success';
+    } catch (error) {
+        localResult.textContent = `Error: ${error.message}. Suggestion: ${suggestFix(error)}`;
+        localResult.className = 'error';
+        localStorage.removeItem('jsonBackup'); // Clear invalid data
+    }
+    hideLoading();
+}
+
+// Export History
+function exportHistory() {
+    showLoading();
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(jsonHistory));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', 'json_history.json');
+    downloadAnchor.click();
+    hideLoading();
+}
+
+// Reset Local Storage
+function resetLocalStorage() {
+    showLoading();
+    if (confirm('Are you sure you want to reset all local data?')) {
+        localStorage.clear();
+        jsonHistory = [];
+        loadHistory();
+        clearInput();
+        document.getElementById('localResult').textContent = 'Local storage reset!';
+        document.getElementById('localResult').className = 'success';
+    }
+    hideLoading();
+}
+
+// Send Feedback
+function sendFeedback(event) {
+    event.preventDefault();
+    showLoading();
+    const email = document.getElementById('userEmail').value;
+    const message = document.getElementById('message').value;
+
+    if (email && message) {
+        const feedback = `Email: ${email}\nMessage: ${message}`;
+        localStorage.setItem('feedbackDraft', feedback);
+        alert(`Feedback drafted locally:\n${feedback}\nPlease copy and send to vin.nesia.id@gmail.com manually.`);
         document.getElementById('contactForm').reset();
-    }).catch(err => {
-        alert('Failed to send feedback: ' + err.message);
-    });
-});
+    } else {
+        alert('Please fill in both email and message.');
+    }
+    hideLoading();
+}
