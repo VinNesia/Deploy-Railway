@@ -30,6 +30,7 @@ nav {
     top: 0;
     z-index: 1000;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
 }
 
 nav .container {
@@ -61,7 +62,7 @@ nav ul li a, nav ul li button {
     text-decoration: none;
     font-size: 1em;
     font-weight: 500;
-    transition: color 0.3s;
+    transition: color 0.3s ease;
 }
 
 nav ul li a:hover, nav ul li button:hover {
@@ -82,6 +83,11 @@ nav ul li a:hover, nav ul li button:hover {
     display: none;
     font-size: 1.5em;
     cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-toggle:hover {
+    transform: rotate(90deg);
 }
 
 /* Hero Section */
@@ -119,7 +125,7 @@ nav ul li a:hover, nav ul li button:hover {
     border-radius: 50px;
     font-weight: 600;
     font-size: 1.1em;
-    transition: transform 0.3s, background 0.3s;
+    transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .cta-button:hover {
@@ -155,7 +161,7 @@ nav ul li a:hover, nav ul li button:hover {
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card.light-theme {
@@ -209,6 +215,9 @@ nav ul li a:hover, nav ul li button:hover {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 30px;
     animation: slideUp 0.5s ease-in;
+    resize: horizontal;
+    overflow: auto;
+    min-height: 600px;
 }
 
 .editor.light-theme {
@@ -218,6 +227,7 @@ nav ul li a:hover, nav ul li button:hover {
 
 .input-section, .output-section {
     flex: 1;
+    max-width: 50%;
 }
 
 .input-controls {
@@ -234,7 +244,7 @@ textarea, input[type="text"], select {
     border-radius: 8px;
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 textarea:focus, input[type="text"]:focus, select:focus {
@@ -267,7 +277,7 @@ textarea {
     font-size: 1.2em;
     color: #63b3ed;
     pointer-events: none;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease;
 }
 
 .textarea-wrapper.dragover .drop-overlay {
@@ -293,7 +303,7 @@ textarea {
     border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
-    transition: background 0.3s, transform 0.3s;
+    transition: background 0.3s ease, transform 0.3s ease;
 }
 
 .file-upload.label.light-theme {
@@ -326,12 +336,22 @@ button {
     display: flex;
     align-items: center;
     gap: 8px;
-    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.3s ease;
+    outline: none;
+}
+
+button:focus {
+    outline: 2px solid #63b3ed;
+    outline-offset: 2px;
 }
 
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+    transform: scale(0.98);
 }
 
 button:nth-child(1) { background: #2b6cb0; color: #fff; }
@@ -350,14 +370,18 @@ button:nth-child(7) { background: #276749; color: #fff; }
 button:nth-child(7):hover { background: #22543d; }
 button:nth-child(8) { background: #805ad5; color: #fff; }
 button:nth-child(8):hover { background: #6b46c1; }
-button:nth-child(9) { background: #24292e; color: #fff; }
-button:nth-child(9):hover { background: #1a1e22; }
-button:nth-child(10) { background: #4b5563; color: #fff; }
-button:nth-child(10):hover { background: #374151; }
-button:nth-child(11) { background: #2a4365; color: #fff; }
-button:nth-child(11):hover { background: #1e2a44; }
-button:nth-child(12) { background: #374151; color: #fff; }
-button:nth-child(12):hover { background: #2d3748; }
+button:nth-child(9) { background: #2a4365; color: #fff; }
+button:nth-child(9):hover { background: #1e2a44; }
+button:nth-child(10) { background: #374151; color: #fff; }
+button:nth-child(10):hover { background: #2d3748; }
+button:nth-child(11) { background: #2b6cb0; color: #fff; }
+button:nth-child(11):hover { background: #2a4365; }
+button:nth-child(12) { background: #ed8936; color: #fff; }
+button:nth-child(12):hover { background: #dd6b20; }
+button:nth-child(13) { background: #6b46c1; color: #fff; }
+button:nth-child(13):hover { background: #553c9a; }
+button:nth-child(14) { background: #c53030; color: #fff; }
+button:nth-child(14):hover { background: #9b2c2c; }
 
 .output-section pre {
     background: #4a5568;
@@ -367,13 +391,14 @@ button:nth-child(12):hover { background: #2d3748; }
     font-family: 'Courier New', Courier, monospace;
     font-size: 14px;
     overflow-x: auto;
+    transition: height 0.3s ease;
 }
 
 .output-section.light-theme pre {
     background: #f7fafc;
 }
 
-#validationResult, #gistResult, #dbResult {
+#validationResult, #localResult, #jsonAnalysis {
     margin-top: 15px;
     font-size: 1em;
     font-weight: 500;
@@ -389,6 +414,26 @@ button:nth-child(12):hover { background: #2d3748; }
 #validationResult.success {
     background: #2f855a;
     color: #fff;
+}
+
+#localResult.success {
+    background: #2f855a;
+    color: #fff;
+}
+
+#localResult.error {
+    background: #c53030;
+    color: #fff;
+}
+
+#jsonAnalysis {
+    background: #4a5568;
+    color: #e2e8f0;
+}
+
+#jsonAnalysis.light-theme {
+    background: #f7fafc;
+    color: #2d3748;
 }
 
 .stats {
@@ -409,6 +454,13 @@ button:nth-child(12):hover { background: #2d3748; }
 
 .highlight.light-theme {
     background: #fefcbf;
+}
+
+.spinner {
+    text-align: center;
+    font-size: 1.2em;
+    color: #63b3ed;
+    padding: 20px;
 }
 
 /* About Section */
@@ -523,6 +575,34 @@ button:nth-child(12):hover { background: #2d3748; }
     margin-bottom: 20px;
 }
 
+.contact-details {
+    margin: 20px 0;
+    font-size: 1.1em;
+    color: #cbd5e0;
+}
+
+.contact-details.light-theme {
+    color: #4a5568;
+}
+
+.contact-details p {
+    margin: 10px 0;
+}
+
+.contact-details a {
+    color: #63b3ed;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-details a:hover {
+    color: #2b6cb0;
+}
+
+.contact-details i {
+    margin-right: 10px;
+}
+
 #contactForm {
     max-width: 500px;
     margin: 20px auto;
@@ -565,7 +645,7 @@ button:nth-child(12):hover { background: #2d3748; }
 .social-links a {
     color: #63b3ed;
     font-size: 1.5em;
-    transition: color 0.3s, transform 0.3s;
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-links a:hover {
@@ -631,6 +711,7 @@ footer a:hover {
         width: 100%;
         background: #2d3748;
         padding: 20px;
+        animation: slideDown 0.3s ease;
     }
 
     nav ul.active {
@@ -653,6 +734,7 @@ footer a:hover {
         flex-direction: column;
         padding: 20px;
         gap: 15px;
+        min-height: auto;
     }
 
     .features-grid {
@@ -674,11 +756,12 @@ footer a:hover {
 }
 
 @media (min-width: 769px) {
-    .editor {
-        min-height: 600px;
-    }
-
     .input-section, .output-section {
         max-width: 50%;
     }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
