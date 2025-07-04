@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTime();
     setInterval(updateTime, 60000); // Update time every minute
     checkScriptLoaded();
+    setupMenuToggle();
 });
 
 // Check if script loaded successfully
@@ -17,9 +18,13 @@ function checkScriptLoaded() {
 }
 
 // Toggle menu for mobile
-document.querySelector('.menu-toggle').addEventListener('click', () => {
-    document.querySelector('nav ul').classList.toggle('active');
-});
+function setupMenuToggle() {
+    const menuToggle = document.getElementById('menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    menuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
+}
 
 // Toggle theme
 document.getElementById('theme-toggle').addEventListener('click', () => {
