@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Format, validate, and analyze JSON with JSON Beautifier. A simple, offline JSON tool.">
     <meta name="keywords" content="JSON, beautifier, formatter, validator, analyzer">
-    <title>JSON Beautifier - Ultimate JSON Formatter & Validator</title>
+    <title>JSON Beautifier - Ultimate JSON Formatter</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="assets/fontawesome.min.css">
     <link rel="stylesheet" href="assets/monokai-sublime.min.css">
@@ -18,22 +18,22 @@
                 <div class="logo">
                     <i class="fas fa-code"></i> JSON Beautifier
                 </div>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#editor">Editor</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                    <li><a href="license.html">License</a></li>
-                    <li><button id="theme-toggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle Light/Dark Theme"><i class="fas fa-sun"></i></button></li>
-                </ul>
-                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+                <button id="menu-toggle" class="menu-toggle" aria-label="Toggle Menu"><i class="fas fa-bars"></i></button>
             </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#editor">Editor</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="license.html">License</a></li>
+                <li><button id="theme-toggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle Light/Dark Theme"><i class="fas fa-sun"></i></button></li>
+            </ul>
         </nav>
     </header>
 
     <section id="home" class="hero">
         <div class="container">
-            <h1>Ultimate JSON Formatter & Validator</h1>
-            <p>Transform and validate JSON effortlessly with this offline tool.</p>
+            <h1>JSON Formatter</h1>
+            <p>Transform and validate JSON easily.</p>
             <a href="#editor" class="cta-button">Get Started</a>
         </div>
     </section>
@@ -44,19 +44,19 @@
             <div class="editor" id="editorContainer">
                 <div class="input-section">
                     <div class="input-controls">
-                        <select id="indentation" title="Choose indentation style" aria-label="Indentation Style">
+                        <select id="indentation" title="Indentation Style" aria-label="Indentation Style">
                             <option value="2">2 Spaces</option>
                             <option value="4">4 Spaces</option>
                             <option value="tab">Tab</option>
                         </select>
                     </div>
                     <div class="textarea-wrapper" id="textareaWrapper">
-                        <textarea id="jsonInput" placeholder="Enter or paste your JSON here..." rows="12" aria-label="JSON Input"></textarea>
-                        <div class="drop-overlay">Drop JSON File Here</div>
+                        <textarea id="jsonInput" placeholder="Enter or paste your JSON..." rows="8" aria-label="JSON Input"></textarea>
+                        <div class="drop-overlay">Drop JSON Here</div>
                     </div>
                     <div class="file-upload">
                         <input type="file" id="jsonFile" accept=".json" aria-label="Upload JSON File">
-                        <label for="jsonFile"><i class="fas fa-upload"></i> Upload JSON</label>
+                        <label for="jsonFile"><i class="fas fa-upload"></i> Upload</label>
                     </div>
                     <div class="buttons">
                         <button onclick="beautifyJSON()" title="Format JSON (Ctrl+B)" aria-label="Beautify JSON"><i class="fas fa-paint-brush"></i> Beautify</button>
@@ -64,8 +64,8 @@
                         <button onclick="compressJSON()" title="Minify JSON (Ctrl+M)" aria-label="Compress JSON"><i class="fas fa-compress"></i> Compress</button>
                         <button onclick="copyOutput()" title="Copy JSON" aria-label="Copy JSON"><i class="fas fa-copy"></i> Copy</button>
                         <button onclick="downloadJSON()" title="Download JSON" aria-label="Download JSON"><i class="fas fa-download"></i> Download</button>
-                        <button onclick="saveToLocal()" title="Save to Local Storage" aria-label="Save to Local Storage"><i class="fas fa-save"></i> Save</button>
-                        <button onclick="loadFromLocal()" title="Load from Local Storage" aria-label="Load from Local Storage"><i class="fas fa-cloud-download-alt"></i> Load</button>
+                        <button onclick="saveToLocal()" title="Save to Local" aria-label="Save to Local"><i class="fas fa-save"></i> Save</button>
+                        <button onclick="loadFromLocal()" title="Load from Local" aria-label="Load from Local"><i class="fas fa-cloud-download-alt"></i> Load</button>
                     </div>
                 </div>
                 <div class="output-section">
@@ -79,8 +79,8 @@
 
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2>Contact Us</h2>
-            <p>Have questions or feedback? Reach out to us!</p>
+            <h2>Contact</h2>
+            <p>Questions or feedback? Contact us!</p>
             <form id="contactForm" onsubmit="sendFeedback(event)">
                 <input type="email" id="userEmail" placeholder="Your Email" required aria-label="Your Email">
                 <textarea id="message" placeholder="Your Feedback" required aria-label="Your Feedback"></textarea>
@@ -88,15 +88,15 @@
             </form>
             <div class="contact-details">
                 <p><i class="fas fa-envelope"></i> <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
-                <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/62895354511777" target="_blank">+62 895-3545-11777</a></p>
-                <p><i class="fab fa-instagram"></i> <a href="https://instagram.com/vin.nesia.id" target="_blank">@vin.nesia.id</a></p>
+                <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/62895354511777">+62 895-3545-11777</a></p>
+                <p><i class="fab fa-instagram"></i> <a href="https://instagram.com/vin.nesia.id">@vin.nesia.id</a></p>
             </div>
         </div>
     </section>
 
     <footer id="footer">
         <div class="container">
-            <p>© 2025 JSON Beautifier. Made with <i class="fas fa-heart"></i> for developers. Last updated: <span id="currentTime"></span> | <a href="license.html">License</a></p>
+            <p>© 2025 JSON Beautifier. Made with <i class="fas fa-heart"></i>. Updated: <span id="currentTime"></span> | <a href="license.html">License</a></p>
         </div>
     </footer>
 
