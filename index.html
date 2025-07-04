@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Format, validate, and share JSON with JSON Beautifier. Integrated with GitHub Gist and Supabase for seamless collaboration.">
+    <meta name="keywords" content="JSON, beautifier, formatter, validator, GitHub Gist, Supabase">
+    <title>JSON Beautifier - Ultimate JSON Formatter & Validator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/monokai-sublime.min.css">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+</head>
+<body class="dark-theme">
+    <header>
+        <nav>
+            <div class="container">
+                <div class="logo">
+                    <i class="fas fa-code"></i> JSON Beautifier
+                </div>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#editor">Editor</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#privacy">Privacy</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="license.html">License</a></li>
+                    <li><button id="theme-toggle" class="theme-toggle" title="Toggle Theme"><i class="fas fa-sun"></i></button></li>
+                </ul>
+                <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Ultimate JSON Formatter & Validator</h1>
+            <p>Transform, validate, and manage JSON effortlessly with advanced integrations like GitHub Gist and Supabase.</p>
+            <a href="#editor" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>Smart Formatting</h3>
+                    <p>Beautify JSON with customizable indentation and syntax highlighting.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Intelligent Validation</h3>
+                    <p>Validate JSON with detailed error messages and fix suggestions.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-compress"></i>
+                    <h3>Compression</h3>
+                    <p>Minify JSON for efficient storage and transfer.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-database"></i>
+                    <h3>Database Storage</h3>
+                    <p>Save and retrieve JSON using Supabase integration.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-share-alt"></i>
+                    <h3>Share via Gist</h3>
+                    <p>Share JSON using GitHub Gist integration.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Data Analysis</h3>
+                    <p>Explore JSON structure with detailed statistics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="editor" class="editor-section">
+        <div class="container">
+            <h2>JSON Editor</h2>
+            <div class="editor">
+                <div class="input-section">
+                    <div class="input-controls">
+                        <input type="text" id="jsonSearch" placeholder="Search in JSON..." title="Search within JSON output">
+                        <select id="indentation" title="Choose indentation style">
+                            <option value="2">2 Spaces</option>
+                            <option value="4">4 Spaces</option>
+                            <option value="tab">Tab</option>
+                        </select>
+                        <input type="text" id="gistId" placeholder="Enter Gist ID..." title="Load JSON from GitHub Gist">
+                        <input type="text" id="jsonId" placeholder="Enter JSON ID..." title="Load JSON from Database">
+                    </div>
+                    <div class="textarea-wrapper" id="textareaWrapper">
+                        <textarea id="jsonInput" placeholder="Enter, paste, or drag-and-drop your JSON here..." rows="12"></textarea>
+                        <div class="drop-overlay">Drop JSON File Here</div>
+                    </div>
+                    <div class="file-upload">
+                        <input type="file" id="jsonFile" accept=".json">
+                        <label for="jsonFile"><i class="fas fa-upload"></i> Upload JSON</label>
+                    </div>
+                    <div class="history-section">
+                        <select id="historySelect" title="Select previous JSON inputs">
+                            <option value="">Select Previous JSON</option>
+                        </select>
+                    </div>
+                    <div class="buttons">
+                        <button onclick="beautifyJSON()" title="Format JSON (Ctrl+B)"><i class="fas fa-paint-brush"></i> Beautify</button>
+                        <button onclick="validateJSON()" title="Validate JSON (Ctrl+V)"><i class="fas fa-check-circle"></i> Validate</button>
+                        <button onclick="compressJSON()" title="Minify JSON (Ctrl+M)"><i class="fas fa-compress"></i> Compress</button>
+                        <button onclick="undoInput()" title="Undo (Ctrl+Z)"><i class="fas fa-undo"></i> Undo</button>
+                        <button onclick="redoInput()" title="Redo (Ctrl+Y)"><i class="fas fa-redo"></i> Redo</button>
+                        <button onclick="clearInput()" title="Clear all"><i class="fas fa-trash"></i> Clear</button>
+                        <button onclick="copyOutput()" title="Copy JSON"><i class="fas fa-copy"></i> Copy</button>
+                        <button onclick="downloadJSON()" title="Download JSON"><i class="fas fa-download"></i> Download</button>
+                        <button onclick="saveToGist()" title="Save to Gist"><i class="fab fa-github"></i> Save to Gist</button>
+                        <button onclick="loadFromGist()" title="Load from Gist"><i class="fas fa-cloud-download-alt"></i> Load Gist</button>
+                        <button onclick="saveToDatabase()" title="Save to DB"><i class="fas fa-database"></i> Save to DB</button>
+                        <button onclick="loadFromDatabase()" title="Load from DB"><i class="fas fa-cloud-download-alt"></i> Load from DB</button>
+                    </div>
+                </div>
+                <div class="output-section">
+                    <h3>Output</h3>
+                    <pre><code id="jsonOutput" class="language-json"></code></pre>
+                    <div id="validationResult"></div>
+                    <div id="gistResult"></div>
+                    <div id="dbResult"></div>
+                    <div id="jsonStats" class="stats"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>JSON Beautifier is created by Vin Nesia to simplify JSON management for developers worldwide. Our mission is to provide a powerful, user-friendly tool with cutting-edge integrations like GitHub Gist and Supabase. We're passionate about enhancing productivity and collaboration in coding projects.</p>
+        </div>
+    </section>
+
+    <section id="privacy" class="privacy-section">
+        <div class="container">
+            <h2>Privacy Policy</h2>
+            <p>We value your privacy. JSON data uploaded to this site is processed securely and not stored unless explicitly saved to our database via Supabase integration. For more details, contact us at vin.nesia.id@gmail.com.</p>
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Have questions or feedback? Reach out to us!</p>
+            <form id="contactForm">
+                <input type="email" id="userEmail" placeholder="Your Email" required>
+                <textarea id="message" placeholder="Your Feedback" required></textarea>
+                <button type="submit"><i class="fas fa-paper-plane"></i> Send Feedback</button>
+            </form>
+            <div class="social-links">
+                <a href="https://instagram.com/vin.nesia.id" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/62895354511777" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="mailto:vin.nesia.id@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer">
+        <div class="container">
+            <p>© 2025 JSON Beautifier. Made with <i class="fas fa-heart"></i> for developers. Last updated: <span id="currentTime"></span> | <a href="license.html">License</a></p>
+        </div>
+    </footer>
+
+    <script src="assets/highlight.min.js"></script>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js"></script>
+</body>
+</html>
