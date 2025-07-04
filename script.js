@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateTime, 60000); // Update time every minute
     checkScriptLoaded();
     setupMenuToggle();
+    setupFileUpload();
 });
 
 // Check if script loaded successfully
@@ -100,6 +101,51 @@ function setupKeyboardShortcuts() {
                 case 'v': e.preventDefault(); validateJSON(); break;
                 case 'm': e.preventDefault(); compressJSON(); break;
             }
+        }
+    });
+}
+
+// File Upload Setup
+function setupFileUpload() {
+    const fileInput = document.getElementById('jsonFile');
+    const textarea = document.getElementById('jsonInput');
+    const validationResult = document.getElementById('validationResult');
+
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            if (file.type !== 'application/json') {
+                validationResult.textContent = 'Error: Please upload a valid JSON file.';
+                validationResult.className = 'error';
+                fileInput.value = ''; // Reset input
+                return;
+            }
+            if (file.size > 5242880) {
+                validationResult.textContent = 'Error: File size exceeds 5MB limit.';
+                validationResult.className = 'error';
+                fileInput.value = ''; // Reset input
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    JSON.parse(e.target.result); // Validasi JSON
+                    textarea.value = e.target.result;
+                    beautifyJSON();
+                    validationResult.textContent = 'JSON file uploaded successfully!';
+                    validationResult.className = 'success';
+                } catch (error) {
+                    validationResult.textContent = `Error: Invalid JSON file - ${error.message}`;
+                    validationResult.className = 'error';
+                    textarea.value = '';
+                }
+            };
+            reader.onerror = () => {
+                validationResult.textContent = 'Error: Failed to read the file.';
+                validationResult.className = 'error';
+                fileInput.value = ''; // Reset input
+            };
+            reader.readAsText(file);
         }
     });
 }
@@ -236,23 +282,6 @@ function downloadJSON() {
         alert('Nothing to download!');
     }
 }
-
-// File Upload
-document.getElementById('jsonFile').addEventListener('change', function (event) {
-    const file = event.target.files[0];
-    if (file) {
-        if (file.size > 5242880) {
-            alert('File size exceeds 5MB limit.');
-            return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            document.getElementById('jsonInput').value = e.target.result;
-            beautifyJSON();
-        };
-        reader.readAsText(file);
-    }
-});
 
 // Save to Local Storage
 function saveToLocal() {
