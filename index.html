@@ -20,10 +20,7 @@
                 </div>
                 <ul>
                     <li><a href="#home">Home</a></li>
-                    <li><a href="#features">Features</a></li>
                     <li><a href="#editor">Editor</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#privacy">Privacy</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="license.html">License</a></li>
                     <li><button id="theme-toggle" class="theme-toggle" title="Toggle Theme" aria-label="Toggle Light/Dark Theme"><i class="fas fa-sun"></i></button></li>
@@ -36,46 +33,8 @@
     <section id="home" class="hero">
         <div class="container">
             <h1>Ultimate JSON Formatter & Validator</h1>
-            <p>Transform, validate, analyze, and manage JSON effortlessly with this offline tool.</p>
+            <p>Transform and validate JSON effortlessly with this offline tool.</p>
             <a href="#editor" class="cta-button">Get Started</a>
-        </div>
-    </section>
-
-    <section id="features" class="features-section">
-        <div class="container">
-            <h2>Key Features</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <i class="fas fa-paint-brush"></i>
-                    <h3>Smart Formatting</h3>
-                    <p>Beautify JSON with customizable indentation and syntax highlighting.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Intelligent Validation</h3>
-                    <p>Validate JSON with detailed error messages and fix suggestions.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-compress"></i>
-                    <h3>Compression</h3>
-                    <p>Minify JSON for efficient storage and transfer.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-save"></i>
-                    <h3>Local Storage</h3>
-                    <p>Save and load JSON using your browser's local storage.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-copy"></i>
-                    <h3>Manual Share</h3>
-                    <p>Copy JSON to share manually (no server integration).</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-chart-bar"></i>
-                    <h3>Advanced Analysis</h3>
-                    <p>Analyze JSON structure with detailed statistics and visualizations.</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -85,7 +44,6 @@
             <div class="editor" id="editorContainer">
                 <div class="input-section">
                     <div class="input-controls">
-                        <input type="text" id="jsonSearch" placeholder="Search in JSON..." title="Search within JSON output" aria-label="Search JSON">
                         <select id="indentation" title="Choose indentation style" aria-label="Indentation Style">
                             <option value="2">2 Spaces</option>
                             <option value="4">4 Spaces</option>
@@ -93,79 +51,45 @@
                         </select>
                     </div>
                     <div class="textarea-wrapper" id="textareaWrapper">
-                        <textarea id="jsonInput" placeholder="Enter, paste, or drag-and-drop your JSON here..." rows="12" aria-label="JSON Input"></textarea>
+                        <textarea id="jsonInput" placeholder="Enter or paste your JSON here..." rows="12" aria-label="JSON Input"></textarea>
                         <div class="drop-overlay">Drop JSON File Here</div>
                     </div>
                     <div class="file-upload">
                         <input type="file" id="jsonFile" accept=".json" aria-label="Upload JSON File">
                         <label for="jsonFile"><i class="fas fa-upload"></i> Upload JSON</label>
                     </div>
-                    <div class="history-section">
-                        <select id="historySelect" title="Select previous JSON inputs" aria-label="Previous JSON History">
-                            <option value="">Select Previous JSON</option>
-                        </select>
-                    </div>
                     <div class="buttons">
                         <button onclick="beautifyJSON()" title="Format JSON (Ctrl+B)" aria-label="Beautify JSON"><i class="fas fa-paint-brush"></i> Beautify</button>
                         <button onclick="validateJSON()" title="Validate JSON (Ctrl+V)" aria-label="Validate JSON"><i class="fas fa-check-circle"></i> Validate</button>
                         <button onclick="compressJSON()" title="Minify JSON (Ctrl+M)" aria-label="Compress JSON"><i class="fas fa-compress"></i> Compress</button>
-                        <button onclick="undoInput()" title="Undo (Ctrl+Z)" aria-label="Undo Input"><i class="fas fa-undo"></i> Undo</button>
-                        <button onclick="redoInput()" title="Redo (Ctrl+Y)" aria-label="Redo Input"><i class="fas fa-redo"></i> Redo</button>
-                        <button onclick="clearInput()" title="Clear all" aria-label="Clear All"><i class="fas fa-trash"></i> Clear</button>
                         <button onclick="copyOutput()" title="Copy JSON" aria-label="Copy JSON"><i class="fas fa-copy"></i> Copy</button>
                         <button onclick="downloadJSON()" title="Download JSON" aria-label="Download JSON"><i class="fas fa-download"></i> Download</button>
-                        <button onclick="saveToLocal()" title="Save to Local Storage" aria-label="Save to Local Storage"><i class="fas fa-save"></i> Save Locally</button>
-                        <button onclick="loadFromLocal()" title="Load from Local Storage" aria-label="Load from Local Storage"><i class="fas fa-cloud-download-alt"></i> Load Locally</button>
-                        <button onclick="exportHistory()" title="Export History" aria-label="Export JSON History"><i class="fas fa-download"></i> Export History</button>
-                        <button onclick="resetLocalStorage()" title="Reset Local Storage" aria-label="Reset Local Storage"><i class="fas fa-trash"></i> Reset</button>
-                        <button onclick="analyzeJSONDetail()" title="Analyze JSON" aria-label="Analyze JSON"><i class="fas fa-chart-bar"></i> Analyze</button>
+                        <button onclick="saveToLocal()" title="Save to Local Storage" aria-label="Save to Local Storage"><i class="fas fa-save"></i> Save</button>
+                        <button onclick="loadFromLocal()" title="Load from Local Storage" aria-label="Load from Local Storage"><i class="fas fa-cloud-download-alt"></i> Load</button>
                     </div>
                 </div>
                 <div class="output-section">
                     <h3>Output</h3>
                     <pre><code id="jsonOutput" class="language-json"></code></pre>
                     <div id="validationResult"></div>
-                    <div id="localResult"></div>
-                    <div id="jsonStats" class="stats"></div>
-                    <div id="jsonAnalysis" class="analysis"></div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="about" class="about-section">
-        <div class="container">
-            <h2>About Us</h2>
-            <p>JSON Beautifier is created by Vin Nesia to simplify JSON management for developers worldwide. This offline tool offers a user-friendly experience with advanced analysis features.</p>
-        </div>
-    </section>
-
-    <section id="privacy" class="privacy-section">
-        <div class="container">
-            <h2>Privacy Policy</h2>
-            <p>We value your privacy. This tool runs offline in your browser and only stores data locally in your browser's storage. Contact us at vin.nesia.id@gmail.com for more details.</p>
         </div>
     </section>
 
     <section id="contact" class="contact-section">
         <div class="container">
             <h2>Contact Us</h2>
-            <p>Have questions or feedback? Reach out to us via the details below!</p>
+            <p>Have questions or feedback? Reach out to us!</p>
             <form id="contactForm" onsubmit="sendFeedback(event)">
                 <input type="email" id="userEmail" placeholder="Your Email" required aria-label="Your Email">
                 <textarea id="message" placeholder="Your Feedback" required aria-label="Your Feedback"></textarea>
-                <button type="submit" aria-label="Send Feedback"><i class="fas fa-paper-plane"></i> Send Feedback</button>
+                <button type="submit" aria-label="Send Feedback"><i class="fas fa-paper-plane"></i> Send</button>
             </form>
             <div class="contact-details">
-                <p><strong>Contact Information:</strong></p>
-                <p><i class="fas fa-envelope"></i> Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
-                <p><i class="fab fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/62895354511777" target="_blank">+62 895-3545-11777</a></p>
-                <p><i class="fab fa-instagram"></i> Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">@vin.nesia.id</a></p>
-            </div>
-            <div class="social-links">
-                <a href="https://instagram.com/vin.nesia.id" target="_blank" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/62895354511777" target="_blank" title="WhatsApp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="mailto:vin.nesia.id@gmail.com" title="Email" aria-label="Email"><i class="fas fa-envelope"></i></a>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p><i class="fab fa-whatsapp"></i> <a href="https://wa.me/62895354511777" target="_blank">+62 895-3545-11777</a></p>
+                <p><i class="fab fa-instagram"></i> <a href="https://instagram.com/vin.nesia.id" target="_blank">@vin.nesia.id</a></p>
             </div>
         </div>
     </section>
