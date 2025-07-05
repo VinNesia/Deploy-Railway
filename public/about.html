@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tentang AI Tools Directory - Katalog tools AI gratis untuk semua kebutuhan.">
+    <meta name="keywords" content="AI tools, about AI Tools Directory, free AI tools">
+    <meta property="og:title" content="Tentang AI Tools Directory">
+    <meta property="og:description" content="Pelajari lebih lanjut tentang misi kami untuk menyediakan katalog tools AI gratis.">
+    <meta property="og:image" content="https://your-domain.com/images/og-image.jpg">
+    <meta property="og:url" content="https://your-domain.com/about.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Tentang Kami - AI Tools Directory</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari tools AI..." aria-label="Cari tools AI">
+                <button onclick="searchTools()" aria-label="Cari">Cari</button>
+            </div>
+            <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="index.html#tools" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="about.html" class="active" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="contact.html" aria-label="Kontak">Kontak</a></li>
+                </ul>
+            </nav>
+            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang">Toggle Theme</button>
+        </div>
+    </header>
+
+    <section class="content">
+        <div class="container">
+            <h1>Tentang Kami</h1>
+            <p>AI Tools Directory adalah platform yang didedikasikan untuk membantu individu dan profesional menemukan tools AI gratis terbaik untuk meningkatkan produktivitas, kreativitas, dan efisiensi. Didirikan pada tahun 2025, misi kami adalah mendemokratisasi akses ke teknologi AI dengan menyediakan katalog yang terkurasi dengan baik dan mudah diakses.</p>
+            <p>Tim kami terdiri dari penggemar teknologi dan profesional AI yang bekerja untuk memastikan setiap tool yang terdaftar telah diverifikasi keaslian dan kegunaannya. Kami juga menyediakan informasi terbaru tentang tren AI dan pembaruan tools melalui blog kami (segera hadir!).</p>
+            <p>Hubungi kami untuk pertanyaan, saran, atau peluang kolaborasi melalui halaman kontak atau langsung di <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a>.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AI Tools Directory. Semua hak dilindungi.</p>
+            <div class="footer-links">
+                <a href="about.html" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="privacy.html" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
+                <a href="terms.html" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
+                <a href="contact.html" aria-label="Kontak">Kontak</a>
+            </div>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
+                <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
