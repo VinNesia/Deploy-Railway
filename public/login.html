@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login atau registrasi ke AI Tools Directory untuk menyimpan bookmark dan ulasan.">
+    <meta name="keywords" content="AI Tools Directory, login, register">
+    <meta name="robots" content="noindex">
+    <meta property="og:title" content="Login - AI Tools Directory">
+    <meta property="og:description" content="Login atau registrasi untuk akses penuh ke fitur AI Tools Directory.">
+    <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
+    <meta property="og:url" content="https://your-domain.com/login.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <title data-i18n="loginTitle">Login - AI Tools Directory</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/images/icon-192x192.png" type="image/png">
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <!-- i18next -->
+    <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari tools AI..." data-i18n="[placeholder]searchPlaceholder" aria-label="Cari tools AI">
+                <button onclick="searchTools()" aria-label="Cari" data-i18n="searchButton">Cari</button>
+            </div>
+            <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
+                    <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="login.html" class="active" data-i18n="login" aria-label="Login">Login</a></li>
+                </ul>
+            </nav>
+            <select id="languageSelect" aria-label="Pilih Bahasa">
+                <option value="id">Bahasa Indonesia</option>
+                <option value="en">English</option>
+            </select>
+            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang" data-i18n="themeToggle">Ganti Tema</button>
+        </div>
+    </header>
+
+    <section class="content">
+        <div class="container">
+            <h1 data-i18n="loginTitle">Login atau Registrasi</h1>
+            <div class="login-form">
+                <form id="authForm" aria-label="Formulir Login/Registrasi">
+                    <div class="form-group">
+                        <label for="email" data-i18n="emailLabel">Email:</label>
+                        <input type="email" id="email" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" data-i18n="passwordLabel">Kata Sandi:</label>
+                        <input type="password" id="password" required aria-required="true">
+                    </div>
+                    <button type="button" id="loginButton" class="btn" data-i18n="loginButton">Login</button>
+                    <button type="button" id="registerButton" class="btn" data-i18n="registerButton">Registrasi</button>
+                    <p id="authError" class="error" style="display: none;"></p>
+                </form>
+                <button id="logoutButton" class="btn" style="display: none;" data-i18n="logoutButton">Logout</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
+            <div class="footer-links">
+                <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
+                <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
+                <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
+            </div>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
+                <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
