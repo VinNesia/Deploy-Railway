@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Katalog tools AI gratis untuk produktivitas, kreativitas, dan lainnya.">
+    <meta name="keywords" content="AI tools, free AI tools, productivity tools, AI directory">
+    <meta property="og:title" content="AI Tools Directory - Katalog Tools AI Gratis">
+    <meta property="og:description" content="Temukan tools AI gratis untuk produktivitas, kreativitas, dan lainnya.">
+    <meta property="og:image" content="https://your-domain.com/images/og-image.jpg">
+    <meta property="og:url" content="https://your-domain.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>AI Tools Directory - Katalog Tools AI Gratis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari tools AI..." aria-label="Cari tools AI">
+                <button onclick="searchTools()" aria-label="Cari">Cari</button>
+            </div>
+            <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="#tools" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="about.html" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="contact.html" aria-label="Kontak">Kontak</a></li>
+                </ul>
+            </nav>
+            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang">Toggle Theme</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <h1>Temukan Tools AI Gratis untuk Segala Kebutuhan</h1>
+            <p>Jelajahi katalog tools AI gratis untuk produktivitas, kreativitas, dan lainnya.</p>
+            <a href="#tools" class="btn" aria-label="Lihat Katalog Tools">Lihat Katalog</a>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="tools">
+        <div class="container">
+            <h2>Katalog Tools AI Gratis</h2>
+            <div id="loading" style="display: none; text-align: center; padding: 20px;">
+                <p>Loading...</p>
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="categoryFilter">Kategori:</label>
+                    <select id="categoryFilter" aria-label="Filter Kategori">
+                        <option value="all">Semua</option>
+                        <option value="text">Teks & Penulisan</option>
+                        <option value="image">Gambar & Desain</option>
+                        <option value="video">Video & Animasi</option>
+                        <option value="productivity">Produktivitas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="sortFilter">Urutkan:</label>
+                    <select id="sortFilter" aria-label="Urutkan Tools">
+                        <option value="name">Nama (A-Z)</option>
+                        <option value="category">Kategori</option>
+                    </select>
+                </div>
+            </div>
+            <div class="tools-grid" id="toolsGrid"></div>
+            <div class="pagination">
+                <button id="prevPage" onclick="changePage(-1)" aria-label="Halaman Sebelumnya">Previous</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage" onclick="changePage(1)" aria-label="Halaman Berikutnya">Next</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>© 2025 AI Tools Directory. Semua hak dilindungi.</p>
+            <div class="footer-links">
+                <a href="about.html" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="privacy.html" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
+                <a href="terms.html" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
+                <a href="contact.html" aria-label="Kontak">Kontak</a>
+            </div>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
+                <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
