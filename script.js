@@ -1,367 +1,281 @@
-// Initialize Highlight.js
-document.addEventListener('DOMContentLoaded', () => {
-    hljs.highlightAll();
-    loadTheme();
-    setupDragAndDrop();
-    setupKeyboardShortcuts();
-    updateTime();
-    setInterval(updateTime, 60000); // Update time every minute
-    checkScriptLoaded();
-    setupMenuToggle();
-    setupFileUpload();
-    console.log('Script loaded and initialized at 04:26 AM WIB');
-});
+// Inisialisasi EmailJS
+emailjs.init("template_b3ayww4"); // Public Key EmailJS
 
-// Check if script loaded successfully
-function checkScriptLoaded() {
-    if (typeof hljs === 'undefined') {
-        console.error('Highlight.js failed to load.');
-        alert('JavaScript failed to load. Please refresh the page.');
-    }
-}
+// State untuk pagination
+let currentPage = 1;
+const toolsPerPage = 6; // Ubah di sini untuk menyesuaikan jumlah tools per halaman
+let allTools = [];
 
-// Toggle menu for mobile
-function setupMenuToggle() {
-    const menuToggle = document.getElementById('menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    if (menuToggle && navMenu) {
-        menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+// Fungsi untuk mengambil data tools dari Firebase
+async function fetchTools() {
+    const loading = document.getElementById('loading');
+    if (loading) loading.style.display = 'block';
+    const dbRef = firebase.database().ref('tools').limitToFirst(toolsPerPage * currentPage);
+    try {
+        const snapshot = await dbRef.once('value');
+        allTools = [];
+        snapshot.forEach(childSnapshot => {
+            allTools.push({ id: childSnapshot.key, ...childSnapshot.val() });
         });
-    } else {
-        console.error('Menu toggle or nav menu not found.');
+        filterAndSortTools();
+    } catch (error) {
+        console.error('Error fetching tools:', error);
+    } finally {
+        if (loading) loading.style.display = 'none';
     }
 }
 
-// Toggle theme
-document.getElementById('theme-toggle')?.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme');
-    document.body.classList.toggle('light-theme');
-    const icon = document.querySelector('#theme-toggle i');
-    if (icon) {
-        icon.classList.toggle('fa-sun');
-        icon.classList.toggle('fa-moon');
-        localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-    }
-});
+// Fungsi untuk menampilkan tools
+function displayTools(tools) {
+    const toolsGrid = document.getElementById('toolsGrid');
+    if (!toolsGrid) return;
+    toolsGrid.innerHTML = '';
 
-// Load theme from localStorage
-function loadTheme() {
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light-theme');
-        document.body.classList.remove('dark-theme');
-        const icon = document.querySelector('#theme-toggle i');
-        if (icon) icon.classList.replace('fa-sun', 'fa-moon');
+    // Hitung indeks untuk pagination
+    const startIndex = (currentPage - 1) * toolsPerPage;
+    const endIndex = startIndex + toolsPerPage;
+    const paginatedTools = tools.slice(startIndex, endIndex);
+
+    // Tampilkan tools
+    paginatedTools.forEach(tool => {
+        const toolCard = document.createElement('div');
+        toolCard.classList.add('tool-card');
+        toolCard.innerHTML = `
+            <img src="${tool.image || 'images/placeholder.jpg'}" alt="${tool.name}" loading="lazy" style="width: 100%; border-radius: 8px; margin-bottom: 1rem;">
+            <h3><a href="tool.html?id=${tool.id}" aria-label="Lihat detail ${tool.name}">${tool.name}</a></h3>
+            <p>${tool.description}</p>
+            <span class="tag">${tool.category.charAt(0).toUpperCase() + tool.category.slice(1)}</span>
+            <a href="${tool.link}" target="_blank" class="btn" onclick="logToolClick('${tool.name}')" aria-label="Kunjungi ${tool.name}">Kunjungi</a>
+            <button class="btn" onclick="saveBookmark('${tool.id}')" aria-label="Simpan ${tool.name} ke Bookmark">Simpan</button>
+        `;
+        toolsGrid.appendChild(toolCard);
+    });
+
+    // Update info halaman
+    const pageInfo = document.getElementById('pageInfo');
+    if (pageInfo) {
+        pageInfo.textContent = `Halaman ${currentPage} dari ${Math.ceil(tools.length / toolsPerPage)}`;
+    }
+
+    // Aktifkan/nonaktifkan tombol pagination
+    document.getElementById('prevPage').disabled = currentPage === 1;
+    document.getElementById('nextPage').disabled = endIndex >= tools.length;
+}
+
+// Fungsi untuk log event ke Google Analytics
+function logToolClick(toolName) {
+    firebase.analytics().logEvent('tool_click', { tool_name: toolName });
+}
+
+function logSearchPerformed(searchTerm) {
+    firebase.analytics().logEvent('search_performed', { search_term: searchTerm });
+}
+
+function logCategoryFilter(category) {
+    firebase.analytics().logEvent('category_filter_applied', { category: category });
+}
+
+function logSortOption(sortOption) {
+    firebase.analytics().logEvent('sort_option_selected', { sort_option: sortOption });
+}
+
+function logPageNavigation(page) {
+    firebase.analytics().logEvent('page_navigation', { page_name: page });
+}
+
+function logPaginationClick(direction) {
+    firebase.analytics().logEvent('pagination_click', { direction: direction });
+}
+
+function logThemeChanged(theme) {
+    firebase.analytics().logEvent('theme_changed', { theme: theme });
+}
+
+// Fungsi pencarian tools
+function searchTools() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredTools = allTools.filter(tool => 
+        tool.name.toLowerCase().includes(searchTerm) || 
+        tool.description.toLowerCase().includes(searchTerm) ||
+        (tool.tags && tool.tags.some(tag => tag.toLowerCase().includes(searchTerm)))
+    );
+    currentPage = 1; // Reset ke halaman 1 saat pencarian
+    displayTools(filteredTools);
+    if (searchTerm) logSearchPerformed(searchTerm);
+}
+
+// Fungsi filter dan sort
+function filterAndSortTools() {
+    const category = document.getElementById('categoryFilter')?.value;
+    const sort = document.getElementById('sortFilter')?.value;
+    let filteredTools = allTools;
+
+    // Filter berdasarkan kategori
+    if (category && category !== 'all') {
+        filteredTools = allTools.filter(tool => tool.category === category);
+        logCategoryFilter(category);
+    }
+
+    // Urutkan berdasarkan pilihan
+    if (sort) {
+        if (sort === 'name') {
+            filteredTools.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sort === 'category') {
+            filteredTools.sort((a, b) => a.category.localeCompare(b.category));
+        }
+        logSortOption(sort);
+    }
+
+    displayTools(filteredTools);
+}
+
+// Fungsi untuk mengganti halaman
+function changePage(direction) {
+    currentPage += direction;
+    logPaginationClick(direction === 1 ? 'next' : 'previous');
+    filterAndSortTools();
+}
+
+// Fungsi untuk menyimpan bookmark
+async function saveBookmark(toolId) {
+    const user = firebase.auth().currentUser;
+    if (!user) {
+        alert('Silakan login untuk menyimpan bookmark');
+        return;
+    }
+    try {
+        await firebase.firestore().collection('bookmarks').doc(user.uid).set({
+            tools: firebase.firestore.FieldValue.arrayUnion(toolId)
+        }, { merge: true });
+        alert('Tool disimpan ke bookmark!');
+    } catch (error) {
+        console.error('Error saving bookmark:', error);
+        alert('Gagal menyimpan bookmark');
     }
 }
 
-// Update current time in footer
-function updateTime() {
-    const now = new Date();
-    const options = { timeZone: 'Asia/Jakarta', hour: '2-digit', minute: '2-digit', weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
-    const formattedTime = now.toLocaleString('en-US', options).replace(' at ', ' ').replace(',', '');
-    document.getElementById('currentTime').textContent = formattedTime;
-}
+// Fungsi untuk mengirim data formulir ke MongoDB dan EmailJS
+async function submitContactForm(name, email, message) {
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        alert('Silakan verifikasi reCAPTCHA');
+        return;
+    }
+    try {
+        // Simpan ke MongoDB
+        const mongoResponse = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message, recaptchaResponse })
+        });
+        const mongoResult = await mongoResponse.json();
+        if (!mongoResponse.ok) throw new Error(mongoResult.error);
 
-// Drag-and-Drop Setup
-function setupDragAndDrop() {
-    const textareaWrapper = document.getElementById('textareaWrapper');
-    const textarea = document.getElementById('jsonInput');
-    if (textareaWrapper && textarea) {
-        ['dragenter', 'dragover'].forEach(event => {
-            textareaWrapper.addEventListener(event, (e) => {
-                e.preventDefault();
-                textareaWrapper.classList.add('dragover');
-            });
+        // Kirim email via EmailJS
+        await emailjs.send('service_zrumu1h', 'template_b3ayww4', {
+            from_name: name,
+            from_email: email,
+            message: message,
+            reply_to: email
         });
 
-        ['dragleave', 'drop'].forEach(event => {
-            textareaWrapper.addEventListener(event, (e) => {
-                e.preventDefault();
-                textareaWrapper.classList.remove('dragover');
-            });
-        });
-
-        textareaWrapper.addEventListener('drop', (e) => {
-            const file = e.dataTransfer.files[0];
-            if (file) handleFileUpload(file);
-        });
-    } else {
-        console.error('Textarea wrapper or input not found for drag-and-drop.');
+        alert('Pesan Anda telah dikirim!');
+        firebase.analytics().logEvent('contact_form_submit');
+    } catch (error) {
+        alert('Terjadi kesalahan: ' + error.message);
     }
 }
 
-// Keyboard Shortcuts
-function setupKeyboardShortcuts() {
-    document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey) {
-            switch (e.key) {
-                case 'b': e.preventDefault(); beautifyJSON(); break;
-                case 'v': e.preventDefault(); validateJSON(); break;
-                case 'm': e.preventDefault(); compressJSON(); break;
+// Fungsi untuk memuat detail tool
+async function loadToolDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const toolId = urlParams.get('id');
+    if (toolId) {
+        const dbRef = firebase.database().ref(`tools/${toolId}`);
+        try {
+            const snapshot = await dbRef.once('value');
+            const tool = snapshot.val();
+            if (tool) {
+                document.getElementById('toolName').textContent = tool.name;
+                document.getElementById('toolImage').src = tool.image || 'images/placeholder.jpg';
+                document.getElementById('toolImage').alt = tool.name;
+                document.getElementById('toolDescription').textContent = tool.description;
+                document.getElementById('toolCategory').textContent = tool.category.charAt(0).toUpperCase() + tool.category.slice(1);
+                document.getElementById('toolLink').href = tool.link;
+                document.getElementById('bookmarkTool').onclick = () => saveBookmark(toolId);
             }
+        } catch (error) {
+            console.error('Error loading tool details:', error);
+        }
+    }
+}
+
+// Event listener
+document.addEventListener('DOMContentLoaded', () => {
+    // Ambil data dari Firebase untuk halaman beranda
+    if (document.getElementById('toolsGrid')) {
+        fetchTools();
+    }
+
+    // Muat detail tool untuk halaman tool.html
+    if (document.getElementById('toolName')) {
+        loadToolDetails();
+    }
+
+    // Tambahkan event listener untuk filter, sort, dan pencarian
+    const categoryFilter = document.getElementById('categoryFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const searchInput = document.getElementById('searchInput');
+    if (categoryFilter) categoryFilter.addEventListener('change', filterAndSortTools);
+    if (sortFilter) sortFilter.addEventListener('change', filterAndSortTools);
+    if (searchInput) searchInput.addEventListener('input', searchTools);
+
+    // Formulir kontak
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            await submitContactForm(name, email, message);
+            contactForm.reset();
+            grecaptcha.reset();
+        });
+    }
+
+    // Event listener untuk navigasi
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const pageName = link.textContent.trim();
+            logPageNavigation(pageName);
+        });
+    });
+
+    // Event listener untuk toggle tema
+    document.getElementById('themeToggle')?.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
+        logThemeChanged(theme);
+    });
+
+    // Terapkan tema yang disimpan
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') document.body.classList.add('dark-theme');
+
+    // Event listener untuk menu hamburger
+    document.querySelector('.nav-toggle')?.addEventListener('click', () => {
+        document.querySelector('nav').classList.toggle('active');
+    });
+
+    // Inisialisasi Firebase Authentication
+    firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+            console.log('User logged in:', user.uid);
+        } else {
+            console.log('No user logged in');
         }
     });
-}
-
-// File Upload Setup
-function setupFileUpload() {
-    const fileInput = document.getElementById('jsonFileUpload');
-    const textarea = document.getElementById('jsonInput');
-    const validationResult = document.getElementById('validationResult');
-    if (fileInput && textarea && validationResult) {
-        fileInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) handleFileUpload(file);
-            else {
-                validationResult.textContent = 'Error: No file selected.';
-                validationResult.className = 'error';
-            }
-        });
-    } else {
-        console.error('File input, textarea, or validation result not found.');
-    }
-}
-
-// Handle File Upload
-function handleFileUpload(file) {
-    const textarea = document.getElementById('jsonInput');
-    const validationResult = document.getElementById('validationResult');
-    const fileInput = document.getElementById('jsonFileUpload');
-
-    if (!textarea || !validationResult || !fileInput) {
-        console.error('Required elements not found for file upload.');
-        return;
-    }
-
-    if (file.type !== 'application/json') {
-        validationResult.textContent = 'Error: Please upload a valid JSON file.';
-        validationResult.className = 'error';
-        fileInput.value = '';
-        return;
-    }
-
-    if (file.size > 5242880) {
-        validationResult.textContent = 'Error: File size exceeds 5MB limit.';
-        validationResult.className = 'error';
-        fileInput.value = '';
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            JSON.parse(e.target.result);
-            textarea.value = e.target.result;
-            beautifyJSON();
-            validationResult.textContent = 'JSON file uploaded successfully!';
-            validationResult.className = 'success';
-        } catch (error) {
-            validationResult.textContent = `Error: Invalid JSON file - ${error.message}`;
-            validationResult.className = 'error';
-            textarea.value = '';
-        }
-    };
-    reader.onerror = () => {
-        validationResult.textContent = 'Error: Failed to read the file.';
-        validationResult.className = 'error';
-        fileInput.value = '';
-    };
-    reader.readAsText(file);
-}
-
-// Beautify JSON
-function beautifyJSON() {
-    const input = document.getElementById('jsonInput').value.trim();
-    const output = document.getElementById('jsonOutput');
-    const validationResult = document.getElementById('validationResult');
-
-    if (!input) {
-        output.textContent = '';
-        validationResult.textContent = 'Error: JSON input is empty.';
-        validationResult.className = 'error';
-        return;
-    }
-
-    if (new TextEncoder().encode(input).length > 5242880) {
-        validationResult.textContent = 'Error: Input exceeds 5MB limit.';
-        validationResult.className = 'error';
-        output.textContent = '';
-        return;
-    }
-
-    try {
-        const parsed = JSON.parse(input);
-        const indent = document.getElementById('indentation').value;
-        const indentValue = indent === 'tab' ? '\t' : parseInt(indent);
-        const formatted = JSON.stringify(parsed, null, indentValue);
-        output.textContent = formatted;
-        output.className = 'language-json';
-        validationResult.textContent = 'Valid JSON!';
-        validationResult.className = 'success';
-        hljs.highlightElement(output);
-    } catch (error) {
-        output.textContent = '';
-        validationResult.textContent = `Error: ${error.message}`;
-        validationResult.className = 'error';
-    }
-}
-
-// Validate JSON
-function validateJSON() {
-    const input = document.getElementById('jsonInput').value.trim();
-    const validationResult = document.getElementById('validationResult');
-
-    if (!input) {
-        validationResult.textContent = 'Error: JSON input is empty.';
-        validationResult.className = 'error';
-        return;
-    }
-
-    if (new TextEncoder().encode(input).length > 5242880) {
-        validationResult.textContent = 'Error: Input exceeds 5MB limit.';
-        validationResult.className = 'error';
-        return;
-    }
-
-    try {
-        JSON.parse(input);
-        validationResult.textContent = 'Valid JSON!';
-        validationResult.className = 'success';
-    } catch (error) {
-        validationResult.textContent = `Error: ${error.message}`;
-        validationResult.className = 'error';
-    }
-}
-
-// Compress JSON
-function compressJSON() {
-    const input = document.getElementById('jsonInput').value.trim();
-    const output = document.getElementById('jsonOutput');
-    const validationResult = document.getElementById('validationResult');
-
-    if (!input) {
-        output.textContent = '';
-        validationResult.textContent = 'Error: JSON input is empty.';
-        validationResult.className = 'error';
-        return;
-    }
-
-    if (new TextEncoder().encode(input).length > 5242880) {
-        validationResult.textContent = 'Error: Input exceeds 5MB limit.';
-        validationResult.className = 'error';
-        output.textContent = '';
-        return;
-    }
-
-    try {
-        const parsed = JSON.parse(input);
-        const compressed = JSON.stringify(parsed);
-        output.textContent = compressed;
-        output.className = 'language-json';
-        validationResult.textContent = 'JSON Compressed!';
-        validationResult.className = 'success';
-        hljs.highlightElement(output);
-    } catch (error) {
-        output.textContent = '';
-        validationResult.textContent = `Error: ${error.message}`;
-        validationResult.className = 'error';
-    }
-}
-
-// Copy Output
-function copyOutput() {
-    const output = document.getElementById('jsonOutput').textContent;
-    if (output) {
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(output).then(() => {
-                alert('JSON copied to clipboard!');
-            }).catch(() => {
-                alert('Failed to copy JSON. Use Ctrl+C manually.');
-            });
-        } else {
-            alert('Clipboard API not supported. Use Ctrl+C manually.');
-        }
-    } else {
-        alert('Nothing to copy!');
-    }
-}
-
-// Download JSON
-function downloadJSON() {
-    const output = document.getElementById('jsonOutput').textContent;
-    if (output) {
-        const blob = new Blob([output], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'formatted.json';
-        a.click();
-        URL.revokeObjectURL(url);
-    } else {
-        alert('Nothing to download!');
-    }
-}
-
-// Save to Local Storage
-function saveToLocal() {
-    const input = document.getElementById('jsonInput').value.trim();
-    const validationResult = document.getElementById('validationResult');
-
-    if (!input) {
-        validationResult.textContent = 'Error: JSON input is empty.';
-        validationResult.className = 'error';
-        return;
-    }
-
-    try {
-        JSON.parse(input);
-        localStorage.setItem('jsonBackup', input);
-        validationResult.textContent = 'JSON saved to local storage!';
-        validationResult.className = 'success';
-    } catch (error) {
-        validationResult.textContent = `Error: ${error.message}`;
-        validationResult.className = 'error';
-    }
-}
-
-// Load from Local Storage
-function loadFromLocal() {
-    const input = localStorage.getItem('jsonBackup');
-    const validationResult = document.getElementById('validationResult');
-    const textarea = document.getElementById('jsonInput');
-
-    if (!input) {
-        validationResult.textContent = 'Error: No JSON found in local storage.';
-        validationResult.className = 'error';
-        return;
-    }
-
-    try {
-        JSON.parse(input);
-        textarea.value = input;
-        beautifyJSON();
-        validationResult.textContent = 'JSON loaded from local storage!';
-        validationResult.className = 'success';
-    } catch (error) {
-        validationResult.textContent = `Error: ${error.message}`;
-        validationResult.className = 'error';
-        localStorage.removeItem('jsonBackup');
-    }
-}
-
-// Send Feedback
-function sendFeedback(event) {
-    event.preventDefault();
-    const email = document.getElementById('userEmail').value;
-    const message = document.getElementById('message').value;
-
-    if (email && message) {
-        const feedback = `Email: ${email}\nMessage: ${message}`;
-        localStorage.setItem('feedbackDraft', feedback);
-        alert(`Feedback drafted locally:\n${feedback}\nPlease send to vin.nesia.id@gmail.com manually.`);
-        document.getElementById('contactForm').reset();
-    } else {
-        alert('Please fill in both email and message.');
-    }
-}
+});
