@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Hubungi AI Tools Directory untuk pertanyaan atau saran.">
     <meta name="keywords" content="AI Tools Directory, contact us, AI tools support">
+    <meta name="robots" content="index, follow">
     <meta property="og:title" content="Kontak AI Tools Directory">
     <meta property="og:description" content="Hubungi kami untuk pertanyaan, saran, atau kerja sama.">
-    <meta property="og:image" content="https://your-domain.com/images/og-image.jpg">
+    <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
     <meta property="og:url" content="https://your-domain.com/contact.html">
     <meta name="twitter:card" content="summary_large_image">
-    <title>Kontak - AI Tools Directory</title>
+    <title data-i18n="contactTitle">Kontak - AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/images/icon-192x192.png" type="image/png">
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
@@ -25,6 +28,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <!-- reCAPTCHA -->
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- i18next -->
+    <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
 </head>
 <body>
     <header>
@@ -33,59 +38,66 @@
                 <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
             </div>
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari tools AI..." aria-label="Cari tools AI">
-                <button onclick="searchTools()" aria-label="Cari">Cari</button>
+                <input type="text" id="searchInput" placeholder="Cari tools AI..." data-i18n="[placeholder]searchPlaceholder" aria-label="Cari tools AI">
+                <button onclick="searchTools()" aria-label="Cari" data-i18n="searchButton">Cari</button>
             </div>
             <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
             <nav>
                 <ul>
-                    <li><a href="index.html" aria-label="Beranda">Beranda</a></li>
-                    <li><a href="index.html#tools" aria-label="Katalog Tools">Katalog</a></li>
-                    <li><a href="about.html" aria-label="Tentang Kami">Tentang Kami</a></li>
-                    <li><a href="contact.html" class="active" aria-label="Kontak">Kontak</a></li>
+                    <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="contact.html" class="active" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
+                    <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
                 </ul>
             </nav>
-            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang">Toggle Theme</button>
+            <select id="languageSelect" aria-label="Pilih Bahasa">
+                <option value="id">Bahasa Indonesia</option>
+                <option value="en">English</option>
+            </select>
+            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang" data-i18n="themeToggle">Ganti Tema</button>
         </div>
     </header>
 
     <section class="content">
         <div class="container">
-            <h1>Kontak Kami</h1>
-            <p>Hubungi kami untuk pertanyaan, saran, atau kerja sama:</p>
+            <h1 data-i18n="contactTitle">Kontak Kami</h1>
+            <p data-i18n="contactIntro">Hubungi kami untuk pertanyaan, saran, atau kerja sama:</p>
             <div class="contact-info">
-                <p><strong>Email:</strong> <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
-                <p><strong>Instagram:</strong> <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
-                <p><strong>WhatsApp:</strong> <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
+                <p><strong data-i18n="emailLabel">Email:</strong> <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p><strong data-i18n="instagramLabel">Instagram:</strong> <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
+                <p><strong data-i18n="whatsappLabel">WhatsApp:</strong> <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
             </div>
-            <h2>Kirim Pesan</h2>
+            <h2 data-i18n="sendMessageTitle">Kirim Pesan</h2>
             <form id="contactForm" aria-label="Formulir Kontak">
                 <div class="form-group">
-                    <label for="name" aria-label="Nama Lengkap">Nama:</label>
+                    <label for="name" data-i18n="nameLabel" aria-label="Nama Lengkap">Nama:</label>
                     <input type="text" id="name" required aria-required="true">
                 </div>
                 <div class="form-group">
-                    <label for="email" aria-label="Alamat Email">Email:</label>
+                    <label for="email" data-i18n="emailLabel" aria-label="Alamat Email">Email:</label>
                     <input type="email" id="email" required aria-required="true">
                 </div>
                 <div class="form-group">
-                    <label for="message" aria-label="Pesan Anda">Pesan:</label>
+                    <label for="message" data-i18n="messageLabel" aria-label="Pesan Anda">Pesan:</label>
                     <textarea id="message" required aria-required="true"></textarea>
                 </div>
-                <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
-                <button type="submit" class="btn" aria-label="Kirim Pesan">Kirim</button>
+                <div class="g-recaptcha" data-sitekey="6LdnKXkrAAAAAOktDrcJGXx10fdg14R7JMdHyMLh"></div>
+                <p id="formError" class="error" style="display: none;"></p>
+                <button type="submit" class="btn" aria-label="Kirim Pesan" data-i18n="submitButton">Kirim</button>
             </form>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>© 2025 AI Tools Directory. Semua hak dilindungi.</p>
+            <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
             <div class="footer-links">
-                <a href="about.html" aria-label="Tentang Kami">Tentang Kami</a>
-                <a href="privacy.html" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
-                <a href="terms.html" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
-                <a href="contact.html" aria-label="Kontak">Kontak</a>
+                <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
+                <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
+                <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
             </div>
             <div class="contact-info">
                 <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
@@ -101,6 +113,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
     <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
