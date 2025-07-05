@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kebijakan Privasi AI Tools Directory - Lindungi data Anda dengan kami.">
+    <meta name="keywords" content="AI Tools Directory, privacy policy, data protection">
+    <meta property="og:title" content="Kebijakan Privasi AI Tools Directory">
+    <meta property="og:description" content="Pelajari bagaimana kami mengumpulkan, menggunakan, dan melindungi data Anda.">
+    <meta property="og:image" content="https://your-domain.com/images/og-image.jpg">
+    <meta property="og:url" content="https://your-domain.com/privacy.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>Kebijakan Privasi - AI Tools Directory</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari tools AI..." aria-label="Cari tools AI">
+                <button onclick="searchTools()" aria-label="Cari">Cari</button>
+            </div>
+            <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="index.html#tools" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="about.html" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="contact.html" aria-label="Kontak">Kontak</a></li>
+                </ul>
+            </nav>
+            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang">Toggle Theme</button>
+        </div>
+    </header>
+
+    <section class="content">
+        <div class="container">
+            <h1>Kebijakan Privasi</h1>
+            <p>Kami di AI Tools Directory berkomitmen untuk melindungi privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda.</p>
+            <h3>Data yang Kami Kumpulkan</h3>
+            <p>Kami hanya mengumpulkan data pribadi yang Anda berikan melalui formulir kontak, seperti nama, email, dan pesan. Data ini disimpan di database kami yang aman dan hanya digunakan untuk menanggapi pertanyaan atau saran Anda.</p>
+            <h3>Penggunaan Cookie</h3>
+            <p>Kami menggunakan cookie untuk menyimpan preferensi pengguna, seperti tema gelap/terang dan riwayat pencarian. Anda dapat menonaktifkan cookie melalui pengaturan browser Anda, tetapi ini dapat memengaruhi pengalaman pengguna.</p>
+            <h3>Penyimpanan dan Keamanan Data</h3>
+            <p>Data formulir kontak disimpan di MongoDB Atlas dengan enkripsi. Kami menghapus data yang tidak lagi diperlukan setelah 6 bulan, kecuali jika diminta untuk dihapus lebih awal.</p>
+            <h3>Perubahan Kebijakan</h3>
+            <p>Kami dapat memperbarui kebijakan ini kapan saja. Perubahan akan dipublikasikan di halaman ini, dan Anda disarankan untuk memeriksanya secara berkala.</p>
+            <p>Untuk permintaan penghapusan data, hubungi kami di <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a>.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AI Tools Directory. Semua hak dilindungi.</p>
+            <div class="footer-links">
+                <a href="about.html" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="privacy.html" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
+                <a href="terms.html" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
+                <a href="contact.html" aria-label="Kontak">Kontak</a>
+            </div>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
+                <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
