@@ -1,17 +1,15 @@
 // Konfigurasi Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyDq2AiS90quxL8Ck3HmwQ18PwspxS9iqeQ",
-    authDomain: "ai-tools-directory.firebaseapp.com",
-    databaseURL: "https://ai-tools-directory.firebaseio.com",
-    projectId: "ai-tools-directory",
-    storageBucket: "ai-tools-directory.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "G-XXXXXXXXXX" // Ganti dengan Measurement ID Google Analytics 4
+    apiKey: "your-api-key",
+    authDomain: "your-auth-domain",
+    databaseURL: "your-database-url",
+    projectId: "your-project-id",
+    storageBucket: "your-storage-bucket",
+    messagingSenderId: "your-messaging-sender-id",
+    appId: "your-app-id",
+    measurementId: "G-XXXXXXXXXX"
 };
 
 // Inisialisasi Firebase
 firebase.initializeApp(firebaseConfig);
-
-// Inisialisasi Analytics
-const analytics = firebase.analytics();
+firebase.analytics();
