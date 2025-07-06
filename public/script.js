@@ -1,11 +1,41 @@
-// Inisialisasi Firebase (sesuaikan dengan firebase-config.js)
+// Konfigurasi Firebase
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
+};
+
 firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const analytics = firebase.analytics();
+
+// State
+let currentPage = 1;
+const toolsPerPage = 6;
+let toolsData = [];
 
 // Autentikasi
+auth.onAuthStateChanged((user) => {
+    const loginBtn = document.getElementById('loginBtn');
+    const bookmarksBtn = document.getElementById('bookmarksBtn');
+    if (user) {
+        loginBtn.style.display = 'none';
+        bookmarksBtn.style.display = 'inline-block';
+    } else {
+        loginBtn.style.display = 'inline-block';
+        bookmarksBtn.style.display = 'none';
+    }
+});
+
 function loginWithEmail() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
             window.location.href = 'index.html';
         })
@@ -16,7 +46,7 @@ function loginWithEmail() {
 
 function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider)
+    auth.signInWithPopup(provider)
         .then((result) => {
             window.location.href = 'index.html';
         })
@@ -30,92 +60,125 @@ document.getElementById('loginForm')?.addEventListener('submit', (e) => {
     loginWithEmail();
 });
 
-// Pencarian dan Filter Tools
-let currentPage = 1;
-const toolsPerPage = 6;
+// Muat Tools dengan AJAX
+async function loadTools() {
+    try {
+        const snapshot = await db.collection('tools').get();
+        toolsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        displayTools(toolsData);
+        displayRecommendedTools();
+    } catch (error) {
+        console.error('Error loading tools:', error);
+    }
+}
 
-function loadTools() {
-    const toolsRef = firebase.database().ref('tools');
-    toolsRef.on('value', (snapshot) => {
-        const tools = snapshot.val();
-        displayTools(tools);
+// Rekomendasi Tools
+function displayRecommendedTools() {
+    const recommendedGrid = document.getElementById('recommendedGrid');
+    recommendedGrid.innerHTML = '';
+    const sortedTools = [...toolsData].sort((a, b) => b.views - a.views).slice(0, 3);
+    sortedTools.forEach(tool => {
+        const toolCard = document.createElement('div');
+        toolCard.className = 'tool-card';
+        toolCard.innerHTML = `
+            <img src="${tool.image || 'https://via.placeholder.com/250x150'}" alt="${tool.name}">
+            <h3>${tool.name}</h3>
+            <p>${tool.description}</p>
+            <span class="rating">${'★'.repeat(Math.round(tool.rating || 0)).padEnd(5, '☆')} (${tool.rating || 0})</span>
+            <a href="tool.html?id=${tool.id}" class="login-btn">Lihat Detail</a>
+        `;
+        recommendedGrid.appendChild(toolCard);
     });
 }
 
-function searchTools() {
-    const query = document.getElementById('searchInput').value.toLowerCase();
-    const toolsRef = firebase.database().ref('tools');
-    toolsRef.orderByChild('name').startAt(query).endAt(query + '\uf8ff').on('value', (snapshot) => {
-        const tools = snapshot.val();
-        displayTools(tools);
-    });
-}
-
-function filterTools() {
-    const category = document.getElementById('categoryFilter').value;
-    const toolsRef = firebase.database().ref('tools');
-    toolsRef.orderByChild('category').equalTo(category || null).on('value', (snapshot) => {
-        const tools = snapshot.val();
-        displayTools(tools);
-    });
-}
-
+// Tampilkan Tools
 function displayTools(tools) {
     const toolsGrid = document.getElementById('toolsGrid');
     toolsGrid.innerHTML = '';
-    if (tools) {
-        const toolArray = Object.values(tools);
-        const start = (currentPage - 1) * toolsPerPage;
-        const end = start + toolsPerPage;
-        const paginatedTools = toolArray.slice(start, end);
+    const start = (currentPage - 1) * toolsPerPage;
+    const end = start + toolsPerPage;
+    const paginatedTools = tools.slice(start, end);
 
-        paginatedTools.forEach(tool => {
-            const toolCard = document.createElement('div');
-            toolCard.className = 'tool-card';
-            toolCard.innerHTML = `
-                <img src="${tool.image || 'https://via.placeholder.com/250x150'}" alt="${tool.name}">
-                <h3>${tool.name}</h3>
-                <p>${tool.description}</p>
-                <span class="rating">${'★'.repeat(Math.round(tool.rating || 0)).padEnd(5, '☆')} (${tool.rating || 0})</span>
-                <a href="#" class="login-btn bookmark-btn" onclick="addBookmark('${tool.id}')">Tambah ke Bookmark</a>
-            `;
-            toolsGrid.appendChild(toolCard);
-        });
-        updatePagination(toolArray.length);
-    }
+    paginatedTools.forEach(tool => {
+        const toolCard = document.createElement('div');
+        toolCard.className = 'tool-card';
+        toolCard.innerHTML = `
+            <img src="${tool.image || 'https://via.placeholder.com/250x150'}" alt="${tool.name}">
+            <h3>${tool.name}</h3>
+            <p>${tool.description}</p>
+            <span class="rating">${'★'.repeat(Math.round(tool.rating || 0)).padEnd(5, '☆')} (${tool.rating || 0})</span>
+            <a href="tool.html?id=${tool.id}" class="login-btn">Lihat Detail</a>
+            <button class="login-btn bookmark-btn" onclick="addBookmark('${tool.id}')">Tambah ke Bookmark</button>
+        `;
+        toolsGrid.appendChild(toolCard);
+    });
+    updatePagination(tools.length);
 }
 
-function addBookmark(toolId) {
-    const user = firebase.auth().currentUser;
-    if (user) {
-        firebase.database().ref(`bookmarks/${user.uid}/${toolId}`).set(true);
-        alert('Tool ditambahkan ke bookmark!');
-    } else {
-        alert('Silakan login terlebih dahulu!');
-    }
+// Pagination
+function updatePagination(totalTools) {
+    const pageInfo = document.getElementById('pageInfo');
+    pageInfo.textContent = `Halaman ${currentPage} dari ${Math.ceil(totalTools / toolsPerPage)}`;
 }
 
 function prevPage() {
     if (currentPage > 1) {
         currentPage--;
-        loadTools();
+        displayTools(toolsData);
     }
 }
 
 function nextPage() {
-    const toolsRef = firebase.database().ref('tools');
-    toolsRef.once('value', (snapshot) => {
-        const totalTools = snapshot.numChildren();
-        if (currentPage < Math.ceil(totalTools / toolsPerPage)) {
-            currentPage++;
-            loadTools();
-        }
-    });
+    if (currentPage < Math.ceil(toolsData.length / toolsPerPage)) {
+        currentPage++;
+        displayTools(toolsData);
+    }
 }
 
-function updatePagination(totalTools) {
-    const pageInfo = document.getElementById('pageInfo');
-    pageInfo.textContent = `Halaman ${currentPage} dari ${Math.ceil(totalTools / toolsPerPage)}`;
+// Pencarian Multi-Keyword & Kategori
+function searchTools() {
+    const query = document.getElementById('searchInput').value.toLowerCase().split(' ');
+    const category = document.getElementById('categoryFilter').value;
+    let filteredTools = toolsData;
+
+    if (query.length > 0 && query[0]) {
+        filteredTools = filteredTools.filter(tool =>
+            query.some(keyword => tool.name.toLowerCase().includes(keyword) || tool.description.toLowerCase().includes(keyword))
+        );
+    }
+    if (category) {
+        filteredTools = filteredTools.filter(tool => tool.category === category);
+    }
+    currentPage = 1;
+    displayTools(filteredTools);
+    displayRecommendedTools(filteredTools.slice(0, 3));
+}
+
+function filterTools() {
+    const category = document.getElementById('categoryFilterTools').value;
+    let filteredTools = toolsData;
+    if (category) {
+        filteredTools = filteredTools.filter(tool => tool.category === category);
+    }
+    currentPage = 1;
+    displayTools(filteredTools);
+}
+
+// Bookmark Per User
+function addBookmark(toolId) {
+    const user = auth.currentUser;
+    if (user) {
+        db.collection('bookmarks').doc(user.uid).collection('userBookmarks').doc(toolId).set({
+            toolId,
+            timestamp: new Date().toISOString()
+        }).then(() => {
+            alert('Tool ditambahkan ke bookmark!');
+        }).catch(error => {
+            console.error('Error adding bookmark:', error);
+        });
+    } else {
+        alert('Silakan login terlebih dahulu!');
+    }
 }
 
 // Kontak Form
@@ -125,7 +188,7 @@ document.getElementById('contactForm')?.addEventListener('submit', (e) => {
     const email = document.getElementById('email').value;
     const message = document.getElementById('message').value;
 
-    firebase.database().ref('contacts').push({
+    db.collection('contacts').add({
         name,
         email,
         message,
@@ -138,5 +201,12 @@ document.getElementById('contactForm')?.addEventListener('submit', (e) => {
     });
 });
 
-// Muat tools saat halaman dimuat
-window.onload = loadTools;
+// Muat saat halaman dimuat
+window.onload = () => {
+    loadTools();
+    auth.onAuthStateChanged(user => {
+        if (window.location.pathname.includes('admin.html') && !user) {
+            window.location.href = 'admin-login.html';
+        }
+    });
+};
