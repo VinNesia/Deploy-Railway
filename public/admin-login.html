@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login Admin - AI Tools Directory">
+    <title>Login Admin - AI Tools Directory</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">AI Tools Directory</div>
+    </header>
+
+    <main class="main-content">
+        <section class="login-section">
+            <div class="login-card">
+                <h2>Login Admin</h2>
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="adminEmail">Email</label>
+                        <input type="email" id="adminEmail" name="email" required placeholder="Masukkan email Anda">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Kata Sandi</label>
+                        <input type="password" id="adminPassword" name="password" required placeholder="Masukkan kata sandi">
+                    </div>
+                    <button type="submit" class="login-btn">Masuk</button>
+                </form>
+                <div id="adminLoginError" class="error-message"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AI Tools Directory</h3>
+                <p>Temukan alat AI terbaik untuk kebutuhan Anda.</p>
+            </div>
+        </div>
+        <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
