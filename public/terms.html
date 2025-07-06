@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Syarat & Ketentuan penggunaan AI Tools Directory.">
-    <meta name="keywords" content="AI Tools Directory, terms of use, user agreement">
+    <meta name="description" content="Syarat dan ketentuan penggunaan AI Tools Directory.">
+    <meta name="keywords" content="terms, AI tools, usage policy">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Syarat & Ketentuan AI Tools Directory">
-    <meta property="og:description" content="Pelajari syarat dan ketentuan penggunaan situs kami.">
+    <meta property="og:title" content="Syarat & Ketentuan - AI Tools Directory">
+    <meta property="og:description" content="Pelajari syarat dan ketentuan penggunaan layanan AI Tools Directory.">
     <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
     <meta property="og:url" content="https://your-domain.com/terms.html">
     <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/icon-192x192.png" type="image/png">
-    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -24,8 +23,8 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
-    <!-- i18next -->
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -43,8 +42,10 @@
                     <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
                     <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
                     <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
                     <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
                     <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
                     <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
                 </ul>
             </nav>
@@ -59,16 +60,7 @@
     <section class="content">
         <div class="container">
             <h1 data-i18n="termsTitle">Syarat & Ketentuan</h1>
-            <p data-i18n="termsIntro">Dengan menggunakan AI Tools Directory, Anda setuju untuk mematuhi syarat dan ketentuan berikut:</p>
-            <h3 data-i18n="siteUsageTitle">Penggunaan Situs</h3>
-            <p data-i18n="siteUsageText">Situs ini menyediakan informasi tentang tools AI gratis untuk keperluan pribadi dan non-komersial. Anda dilarang menyalin, mendistribusikan, atau menggunakan konten untuk tujuan komersial tanpa izin tertulis dari kami.</p>
-            <h3 data-i18n="externalLinksTitle">Tautan Eksternal</h3>
-            <p data-i18n="externalLinksText">Kami menyediakan tautan ke situs eksternal untuk kenyamanan Anda. Kami tidak bertanggung jawab atas konten, layanan, atau kebijakan situs tersebut.</p>
-            <h3 data-i18n="dataUsageTitle">Penggunaan Data</h3>
-            <p data-i18n="dataUsageText">Data yang dikumpulkan melalui formulir kontak hanya digunakan untuk menanggapi pertanyaan Anda. Kami tidak membagikan data Anda dengan pihak ketiga tanpa persetujuan Anda.</p>
-            <h3 data-i18n="termsChangesTitle">Perubahan Syarat</h3>
-            <p data-i18n="termsChangesText">Kami dapat memperbarui syarat ini kapan saja. Perubahan akan dipublikasikan di halaman ini, dan penggunaan situs setelah pembaruan dianggap sebagai penerimaan syarat baru.</p>
-            <p data-i18n="contactForTerms">Untuk pertanyaan tentang syarat ini, hubungi kami di <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a>.</p>
+            <p data-i18n="termsContent">Dengan menggunakan AI Tools Directory, Anda setuju untuk mematuhi syarat dan ketentuan kami. Anda tidak boleh menggunakan layanan kami untuk tujuan yang melanggar hukum atau tidak sah.</p>
         </div>
     </section>
 
@@ -77,6 +69,7 @@
             <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
             <div class="footer-links">
                 <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
                 <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
                 <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
                 <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
@@ -89,7 +82,6 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
