@@ -34,6 +34,10 @@
                 <button><span class="material-icons">search</span></button>
             </div>
             <a href="#" class="login-btn" id="logoutBtn" style="display: none;">Keluar</a>
+            <label class="dark-mode-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
         </div>
     </header>
 
@@ -97,6 +101,8 @@
         </div>
         <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
     </footer>
+
+    <div id="notification" class="notification"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
