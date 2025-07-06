@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Lihat bookmark tools AI gratis Anda di AI Tools Directory.">
-    <meta name="keywords" content="AI tools, bookmarks, free AI tools">
-    <meta name="robots" content="index, follow">
+    <meta name="description" content="Lihat bookmark tools AI favorit Anda di AI Tools Directory.">
+    <meta name="keywords" content="AI tools, bookmarks, saved tools">
+    <meta name="robots" content="noindex">
     <meta property="og:title" content="Bookmark - AI Tools Directory">
-    <meta property="og:description" content="Lihat daftar tools AI gratis yang Anda simpan.">
+    <meta property="og:description" content="Kelola tools AI favorit Anda yang telah disimpan.">
     <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
     <meta property="og:url" content="https://your-domain.com/bookmarks.html">
     <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/icon-192x192.png" type="image/png">
-    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -24,8 +23,8 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
-    <!-- i18next -->
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -43,8 +42,10 @@
                     <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
                     <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
                     <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
                     <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
                     <li><a href="bookmarks.html" class="active" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
                     <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
                 </ul>
             </nav>
@@ -62,7 +63,7 @@
             <div id="loading" style="display: none; text-align: center; padding: 20px;">
                 <p data-i18n="loading">Memuat...</p>
             </div>
-            <div id="bookmarksGrid" class="tools-grid"></div>
+            <div class="tools-grid" id="bookmarksGrid"></div>
         </div>
     </section>
 
@@ -71,6 +72,7 @@
             <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
             <div class="footer-links">
                 <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
                 <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
                 <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
                 <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
@@ -83,7 +85,6 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
