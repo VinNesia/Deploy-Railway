@@ -35,6 +35,10 @@
             </div>
             <a href="login.html" class="login-btn" id="loginBtn">Masuk</a>
             <a href="bookmarks.html" class="login-btn" id="bookmarksBtn" style="display: none;">Bookmark</a>
+            <label class="dark-mode-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
         </div>
     </header>
 
@@ -70,6 +74,8 @@
         </div>
         <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
     </footer>
+
+    <div id="notification" class="notification"></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
