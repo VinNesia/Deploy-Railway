@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Direktori AI Tools Terlengkap - Temukan alat AI untuk kebutuhan Anda!">
-    <title>AI Tools Directory</title>
+    <meta name="description" content="Masuk ke AI Tools Directory - Kelola akun Anda dan akses fitur eksklusif.">
+    <title>Masuk - AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -23,52 +23,32 @@
         </nav>
         <div class="user-actions">
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari AI Tools...">
-                <button onclick="searchTools()"><span class="material-icons">search</span></button>
+                <input type="text" placeholder="Cari AI Tools...">
+                <button><span class="material-icons">search</span></button>
             </div>
-            <a href="login.html" class="login-btn">Masuk</a>
         </div>
     </header>
 
     <main class="main-content">
-        <section class="hero">
-            <h1>Temukan AI Tools Terbaik</h1>
-            <p>Jelajahi ribuan alat AI untuk meningkatkan produktivitas Anda.</p>
-            <button class="explore-btn" onclick="loadTools()">Jelajahi Sekarang</button>
-        </section>
-        <section class="tools-section">
-            <div class="section-header">
-                <h2>AI Tools Terpopuler</h2>
-                <div class="filter-bar">
-                    <select id="categoryFilter">
-                        <option value="">Semua Kategori</option>
-                        <option value="design">Desain</option>
-                        <option value="writing">Penulisan</option>
-                        <option value="data">Analisis Data</option>
-                    </select>
-                    <button onclick="filterTools()">Terapkan</button>
-                </div>
-            </div>
-            <div class="tools-grid" id="toolsGrid">
-                <!-- Tools akan dimuat dinamis oleh script.js -->
-                <div class="tool-card">
-                    <img src="https://via.placeholder.com/250x150" alt="Tool Image">
-                    <h3>AI Writer</h3>
-                    <p>Alat penulisan AI canggih untuk konten kreatif.</p>
-                    <span class="rating">★★★★☆ (4.2)</span>
-                </div>
-                <div class="tool-card">
-                    <img src="https://via.placeholder.com/250x150" alt="Tool Image">
-                    <h3>Design Pro</h3>
-                    <p>Tool desain AI untuk grafis profesional.</p>
-                    <span class="rating">★★★★☆ (4.5)</span>
-                </div>
-                <!-- Tambahan card akan dimuat dinamis -->
-            </div>
-            <div id="pagination" class="pagination">
-                <button onclick="prevPage()">Sebelumnya</button>
-                <span id="pageInfo">Halaman 1</span>
-                <button onclick="nextPage()">Berikutnya</button>
+        <section class="login-section">
+            <div class="login-card">
+                <h2>Masuk ke Akun Anda</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="Masukkan email Anda">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Kata Sandi</label>
+                        <input type="password" id="password" name="password" required placeholder="Masukkan kata sandi">
+                    </div>
+                    <button type="submit" class="login-btn">Masuk</button>
+                </form>
+                <p class="signup-link">Belum punya akun? <a href="#">Daftar di sini</a></p>
+                <div id="loginError" class="error-message"></div>
+                <button class="google-login-btn" onclick="loginWithGoogle()">
+                    <span class="material-icons">login</span> Masuk dengan Google
+                </button>
             </div>
         </section>
     </main>
