@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Tentang AI Tools Directory - Katalog tools AI gratis untuk semua kebutuhan.">
-    <meta name="keywords" content="AI tools, about AI Tools Directory, free AI tools">
+    <meta name="description" content="Pelajari lebih lanjut tentang AI Tools Directory, misi, dan visi kami.">
+    <meta name="keywords" content="AI tools, about, mission, vision">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Tentang AI Tools Directory">
-    <meta property="og:description" content="Pelajari lebih lanjut tentang misi kami untuk menyediakan katalog tools AI gratis.">
+    <meta property="og:title" content="Tentang Kami - AI Tools Directory">
+    <meta property="og:description" content="Ketahui lebih lanjut tentang AI Tools Directory dan bagaimana kami membantu Anda menemukan tools AI terbaik.">
     <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
     <meta property="og:url" content="https://your-domain.com/about.html">
     <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/icon-192x192.png" type="image/png">
-    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -24,8 +23,8 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
-    <!-- i18next -->
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -43,8 +42,10 @@
                     <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
                     <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
                     <li><a href="about.html" class="active" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
                     <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
                     <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
                     <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
                 </ul>
             </nav>
@@ -59,10 +60,7 @@
     <section class="content">
         <div class="container">
             <h1 data-i18n="aboutTitle">Tentang Kami</h1>
-            <p data-i18n="aboutText1">AI Tools Directory adalah platform yang didedikasikan untuk membantu individu dan profesional menemukan tools AI gratis terbaik untuk meningkatkan produktivitas, kreativitas, dan efisiensi. Didirikan pada tahun 2025, misi kami adalah mendemokratisasi akses ke teknologi AI dengan menyediakan katalog yang terkurasi dengan baik dan mudah diakses.</p>
-            <p data-i18n="aboutText2">Tim kami terdiri dari penggemar teknologi dan profesional AI yang bekerja untuk memastikan setiap tool yang terdaftar telah diverifikasi keaslian dan kegunaannya. Kami juga menyediakan informasi terbaru tentang tren AI dan pembaruan tools melalui blog kami (segera hadir!).</p>
-            <p data-i18n="aboutText3">Hubungi kami untuk pertanyaan, saran, atau peluang kolaborasi melalui halaman kontak atau langsung di <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a>.</p>
-            <img src="images/about-team.webp" alt="Tim AI Tools Directory" loading="lazy" style="max-width: 100%; border-radius: 8px; margin-top: 1rem;">
+            <p data-i18n="aboutContent">AI Tools Directory adalah platform yang membantu Anda menemukan dan menjelajahi tools AI terbaik untuk berbagai kebutuhan, mulai dari produktivitas hingga kreativitas. Misi kami adalah menyediakan katalog yang mudah digunakan dan informasi terkini tentang teknologi AI.</p>
         </div>
     </section>
 
@@ -71,6 +69,7 @@
             <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
             <div class="footer-links">
                 <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
                 <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
                 <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
                 <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
@@ -83,7 +82,6 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
