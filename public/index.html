@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Katalog tools AI gratis untuk produktivitas, kreativitas, dan lainnya.">
-    <meta name="keywords" content="AI tools, free AI tools, productivity tools, AI directory">
+    <meta name="description" content="Temukan dan jelajahi tools AI terbaik di AI Tools Directory.">
+    <meta name="keywords" content="AI tools, artificial intelligence, tools directory">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="AI Tools Directory - Katalog Tools AI Gratis">
-    <meta property="og:description" content="Temukan tools AI gratis untuk produktivitas, kreativitas, dan lainnya.">
+    <meta property="og:title" content="AI Tools Directory">
+    <meta property="og:description" content="Jelajahi koleksi tools AI terbaik untuk berbagai kebutuhan.">
     <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
     <meta property="og:url" content="https://your-domain.com">
     <meta name="twitter:card" content="summary_large_image">
-    <title data-i18n="title">AI Tools Directory - Katalog Tools AI Gratis</title>
+    <title data-i18n="homeTitle">AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
@@ -26,9 +26,10 @@
     </script>
     <!-- i18next -->
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="logo">
@@ -41,11 +42,13 @@
             <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
             <nav>
                 <ul>
-                    <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
-                    <li><a href="#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="index.html" class="active" data-i18n="home" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
                     <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
                     <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
                     <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
                     <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
                 </ul>
             </nav>
@@ -57,57 +60,58 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section class="hero">
         <div class="container">
-            <h1 data-i18n="heroTitle">Temukan Tools AI Gratis untuk Segala Kebutuhan</h1>
-            <p data-i18n="heroSubtitle">Jelajahi katalog tools AI gratis untuk produktivitas, kreativitas, dan lainnya.</p>
-            <a href="#tools" class="btn" data-i18n="viewCatalog" aria-label="Lihat Katalog Tools">Lihat Katalog</a>
+            <h1 data-i18n="heroTitle">Temukan Tools AI Terbaik</h1>
+            <p data-i18n="heroSubtitle">Jelajahi koleksi tools AI untuk meningkatkan produktivitas dan kreativitas Anda.</p>
+            <a href="#tools" class="btn" data-i18n="exploreNow">Jelajahi Sekarang</a>
         </div>
     </section>
 
-    <!-- Tools Section -->
-    <section id="tools" class="tools">
+    <section class="tools" id="tools">
         <div class="container">
-            <h2 data-i18n="catalogTitle">Katalog Tools AI Gratis</h2>
+            <h2 data-i18n="toolsTitle">Katalog Tools AI</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="categoryFilter" data-i18n="categoryFilter">Kategori:</label>
+                    <select id="categoryFilter" aria-label="Filter Kategori">
+                        <option value="all" data-i18n="allCategories">Semua</option>
+                        <option value="productivity" data-i18n="productivity">Produktivitas</option>
+                        <option value="creativity" data-i18n="creativity">Kreativitas</option>
+                        <option value="development" data-i18n="development">Pengembangan</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="tagFilter" data-i18n="tagFilter">Tag:</label>
+                    <input type="text" id="tagFilter" placeholder="Masukkan tag..." data-i18n="[placeholder]tagPlaceholder" aria-label="Filter Tag">
+                </div>
+                <div class="filter-group">
+                    <label for="sortFilter" data-i18n="sortFilter">Urutkan:</label>
+                    <select id="sortFilter" aria-label="Urutkan Berdasarkan">
+                        <option value="name" data-i18n="sortName">Nama</option>
+                        <option value="category" data-i18n="sortCategory">Kategori</option>
+                        <option value="rating" data-i18n="sortRating">Rating</option>
+                    </select>
+                </div>
+            </div>
             <div id="loading" style="display: none; text-align: center; padding: 20px;">
                 <p data-i18n="loading">Memuat...</p>
             </div>
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="categoryFilter" data-i18n="categoryLabel">Kategori:</label>
-                    <select id="categoryFilter" aria-label="Filter Kategori">
-                        <option value="all" data-i18n="allCategories">Semua</option>
-                        <option value="text" data-i18n="textCategory">Teks & Penulisan</option>
-                        <option value="image" data-i18n="imageCategory">Gambar & Desain</option>
-                        <option value="video" data-i18n="videoCategory">Video & Animasi</option>
-                        <option value="productivity" data-i18n="productivityCategory">Produktivitas</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="sortFilter" data-i18n="sortLabel">Urutkan:</label>
-                    <select id="sortFilter" aria-label="Urutkan Tools">
-                        <option value="name" data-i18n="sortName">Nama (A-Z)</option>
-                        <option value="category" data-i18n="sortCategory">Kategori</option>
-                        <option value="rating" data-i18n="sortRating">Rating (Tertinggi)</option>
-                    </select>
-                </div>
-            </div>
             <div class="tools-grid" id="toolsGrid"></div>
             <div class="pagination">
-                <button id="prevPage" onclick="changePage(-1)" aria-label="Halaman Sebelumnya" data-i18n="previous">Sebelumnya</button>
+                <button id="prevPage" onclick="changePage(-1)" data-i18n="prevPage" aria-label="Halaman Sebelumnya">Sebelumnya</button>
                 <span id="pageInfo"></span>
-                <button id="nextPage" onclick="changePage(1)" aria-label="Halaman Berikutnya" data-i18n="next">Berikutnya</button>
+                <button id="nextPage" onclick="changePage(1)" data-i18n="nextPage" aria-label="Halaman Selanjutnya">Selanjutnya</button>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
             <div class="footer-links">
                 <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
                 <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
                 <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
                 <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
