@@ -1,10 +1,11 @@
 {
     "name": "AI Tools Directory",
-    "short_name": "AITools",
-    "start_url": "/",
+    "short_name": "AI Tools",
+    "description": "Jelajahi koleksi tools AI terbaik untuk produktivitas, kreativitas, dan pengembangan.",
+    "start_url": "/index.html",
     "display": "standalone",
-    "background_color": "#f5f6f5",
-    "theme_color": "#004085",
+    "background_color": "#ffffff",
+    "theme_color": "#1a73e8",
     "icons": [
         {
             "src": "/images/icon-192x192.png",
@@ -15,6 +16,13 @@
             "src": "/images/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
+        }
+    ],
+    "scope": "/",
+    "related_applications": [
+        {
+            "platform": "web",
+            "url": "https://your-domain.com/blog.html"
         }
     ]
 }
