@@ -1,12 +1,12 @@
-// Konfigurasi Firebase
+// Firebase Configuration
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+    apiKey: "AIzaSyDq2AiS90quxL8Ck3HmwQ18PwspxS9iqeQ",
+    authDomain: "vinai-607a6.firebaseapp.com",
+    projectId: "vinai-607a6",
+    storageBucket: "vinai-607a6.appspot.com",
+    messagingSenderId: "3770054102",
+    appId: "1:3770054102:web:eaa4509fc7eae627286077",
+    measurementId: "G-QMYLYSBC03"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -14,7 +14,7 @@ const auth = firebase.auth();
 const db = firebase.firestore();
 const analytics = firebase.analytics();
 
-// Data AI Tools (minimal 20 tools dengan gambar WebP yang sama)
+// AI Tools Data
 const aiTools = [
     { id: 1, name: "ChatGPT", category: "research", link: "https://chat.openai.com", description: "AI chatbot untuk penelitian dan percakapan alami.", rating: 4.8, image: "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=600&q=80&fm=webp", releaseDate: "2023-11-01" },
     { id: 2, name: "Gemini AI", category: "research", link: "https://gemini.google.com", description: "AI dari Google untuk analisis dan pencarian cerdas.", rating: 4.6, image: "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=600&q=80&fm=webp", releaseDate: "2023-12-15" },
@@ -38,15 +38,15 @@ const aiTools = [
     { id: 20, name: "Fotor", category: "image", link: "https://www.fotor.com", description: "Editor gambar AI dengan fitur pengeditan canggih.", rating: 4.6, image: "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=600&q=80&fm=webp", releaseDate: "2025-07-01" },
 ];
 
-// State
+// App State
 let currentPage = 1;
 const toolsPerPage = 6;
 let toolsData = aiTools;
-let darkMode = true; // Dark mode default
-let freeMode = false; // Free mode default
+let darkMode = true;
+let freeMode = false;
 let showNotification = false;
 
-// Dark Mode & Free Mode with Alpine.js
+// Alpine.js Init
 document.addEventListener('alpine:init', () => {
     Alpine.data('app', () => ({
         darkMode,
@@ -76,14 +76,12 @@ document.addEventListener('alpine:init', () => {
     }));
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (savedDarkMode) {
-        document.body.classList.add('dark');
-    }
-});
+// Auto Dark Mode
+if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark');
+}
 
-// Autentikasi
+// Firebase Auth State
 auth.onAuthStateChanged((user) => {
     const loginBtn = document.getElementById('loginBtn');
     const bookmarksBtn = document.getElementById('bookmarksBtn');
@@ -97,24 +95,22 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
+// Email Login
 function loginWithEmail() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            window.location.href = 'index.html';
-        })
+        .then(() => window.location.href = 'index.html')
         .catch((error) => {
             document.getElementById('loginError').textContent = error.message;
         });
 }
 
+// Google Login
 function loginWithGoogle() {
     const provider = new firebase.auth.GoogleAuthProvider();
     auth.signInWithPopup(provider)
-        .then((result) => {
-            window.location.href = 'index.html';
-        })
+        .then(() => window.location.href = 'index.html')
         .catch((error) => {
             document.getElementById('loginError').textContent = error.message;
         });
@@ -125,14 +121,14 @@ document.getElementById('loginForm')?.addEventListener('submit', (e) => {
     loginWithEmail();
 });
 
-// Muat Tools
+// Load Tools
 function loadTools() {
     displayTools(toolsData);
     displayRecommendedTools();
     displayJustReleasedTools();
 }
 
-// Rekomendasi Tools (Random)
+// Recommended Tools
 function displayRecommendedTools() {
     const recommendedGrid = document.getElementById('recommendedGrid');
     recommendedGrid.innerHTML = '';
@@ -151,15 +147,13 @@ function displayRecommendedTools() {
     });
 }
 
-// Tampilkan Tools
+// Display Tools
 function displayTools(tools) {
     const toolsGrid = document.getElementById('toolsGrid');
     toolsGrid.innerHTML = '';
     const start = (currentPage - 1) * toolsPerPage;
     const end = start + toolsPerPage;
-    const paginatedTools = tools.slice(start, end);
-
-    paginatedTools.forEach(tool => {
+    tools.slice(start, end).forEach(tool => {
         const toolCard = document.createElement('div');
         toolCard.className = 'tool-card bg-gray-800 p-4 rounded-lg shadow-lg';
         toolCard.innerHTML = `
@@ -213,23 +207,18 @@ function nextPage() {
     }
 }
 
-// Pencarian Multi-Keyword & Kategori
+// Search Tools
 function searchTools() {
     const query = document.getElementById('searchInput').value.toLowerCase().split(' ');
-    let filteredTools = aiTools;
-
-    if (query.length > 0 && query[0]) {
-        filteredTools = filteredTools.filter(tool =>
-            query.some(keyword => tool.name.toLowerCase().includes(keyword) || tool.description.toLowerCase().includes(keyword))
-        );
-    }
-    toolsData = filteredTools;
+    toolsData = aiTools.filter(tool =>
+        query.some(keyword => tool.name.toLowerCase().includes(keyword) || tool.description.toLowerCase().includes(keyword))
+    );
     currentPage = 1;
     displayTools(toolsData);
     displayRecommendedTools();
 }
 
-// Filter by Tab
+// Filter by Tabs
 function filterByTab(tab) {
     let filteredTools = [...aiTools];
     if (tab === 'latest') {
@@ -237,7 +226,7 @@ function filterByTab(tab) {
     } else if (tab === 'trending') {
         filteredTools.sort((a, b) => b.rating - a.rating);
     } else if (tab === 'forYou') {
-        filteredTools.sort(() => 0.5 - Math.random()); // Random untuk "For You"
+        filteredTools.sort(() => 0.5 - Math.random());
     }
     toolsData = filteredTools;
     currentPage = 1;
@@ -253,7 +242,7 @@ function filterByCategory(category) {
     displayRecommendedTools();
 }
 
-// Bookmark Cloud (Firebase)
+// Bookmark
 function addBookmark(toolId) {
     const user = auth.currentUser;
     if (user) {
@@ -270,7 +259,7 @@ function addBookmark(toolId) {
     }
 }
 
-// Notifikasi Pop-up
+// Notification
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
     notification.textContent = message;
@@ -281,28 +270,29 @@ function showNotification(message, type = 'success') {
     }, 3000);
 }
 
-// Kontak Form
-document.getElementById('contactForm')?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-
-    db.collection('contacts').add({
-        name,
-        email,
-        message,
-        timestamp: new Date().toISOString()
-    }).then(() => {
-        document.getElementById('contactSuccess').textContent = '';
-        showNotification('Pesan berhasil dikirim!');
-        document.getElementById('contactForm').reset();
-    }).catch((error) => {
-        showNotification('Terjadi kesalahan: ' + error.message, 'error');
+// Contact Form
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+        db.collection('contacts').add({
+            name,
+            email,
+            message,
+            timestamp: new Date().toISOString()
+        }).then(() => {
+            showNotification('Pesan berhasil dikirim!');
+            contactForm.reset();
+        }).catch((error) => {
+            showNotification('Terjadi kesalahan: ' + error.message, 'error');
+        });
     });
 }
 
-// Muat saat halaman dimuat
+// On Page Load
 window.onload = () => {
     loadTools();
     auth.onAuthStateChanged(user => {
