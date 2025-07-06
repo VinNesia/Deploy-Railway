@@ -416,4 +416,33 @@ app.get('/offline.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'offline.html'));
 });
 
-// Penanganan r
+// Penanganan rute untuk halaman statis (SPA fallback)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Middleware untuk penanganan error
+app.use((err, req, res, next) => {
+    logger.error(`${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    if (err.code === 'EBADCSRFTOKEN') {
+        res.status(403).json({ error: 'CSRF token tidak valid' });
+    } else {
+        res.status(500).json({ error: 'Terjadi kesalahan pada server' });
+    }
+});
+
+// Mulai server
+app.listen(port, () => {
+    logger.info(`Server berjalan di port ${port}`);
+});
+
+// Penanganan unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
+// Penanganan uncaught exceptions
+process.on('uncaughtException', (error) => {
+    logger.error('Uncaught Exception:', error);
+    process.exit(1);
+});
