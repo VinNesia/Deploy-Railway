@@ -416,18 +416,4 @@ app.get('/offline.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'offline.html'));
 });
 
-// Penanganan rute SPA
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-    logger.error('Server error:', err);
-    res.status(500).json({ error: 'Terjadi kesalahan server' });
-});
-
-// Mulai server
-app.listen(port, () => {
-    logger.info(`Server berjalan di http://localhost:${port}`);
-});
+// Penanganan r
