@@ -1,12 +1,10 @@
-const firebaseConfig = {
+const firebaseConfigFromFile = {
     apiKey: "your-api-key",
-    authDomain: "your-auth-domain",
-    databaseURL: "your-database-url",
+    authDomain: "your-project-id.firebaseapp.com",
+    databaseURL: "https://your-project-id.firebaseio.com",
     projectId: "your-project-id",
-    storageBucket: "your-storage-bucket",
+    storageBucket: "your-project-id.appspot.com",
     messagingSenderId: "your-messaging-sender-id",
     appId: "your-app-id",
-    measurementId: "your-measurement-id"
+    measurementId: "G-XXXXXXXXXX"
 };
-
-firebase.initializeApp(firebaseConfig);
