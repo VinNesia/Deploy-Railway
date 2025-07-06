@@ -1,6 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
-Disallow: /login.html
-Disallow: /bookmarks.html
-Sitemap: https://your-domain.com/sitemap.xml
+
+Sitemap: https://yourdomain.com/sitemap.xml
