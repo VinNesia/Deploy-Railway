@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Kebijakan Privasi AI Tools Directory - Lindungi data Anda dengan kami.">
-    <meta name="keywords" content="AI Tools Directory, privacy policy, data protection">
+    <meta name="description" content="Kebijakan privasi AI Tools Directory menjelaskan bagaimana kami mengelola data pengguna.">
+    <meta name="keywords" content="privacy policy, AI tools, data protection">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="Kebijakan Privasi AI Tools Directory">
-    <meta property="og:description" content="Pelajari bagaimana kami mengumpulkan, menggunakan, dan melindungi data Anda.">
+    <meta property="og:title" content="Kebijakan Privasi - AI Tools Directory">
+    <meta property="og:description" content="Pelajari bagaimana AI Tools Directory melindungi data Anda.">
     <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
     <meta property="og:url" content="https://your-domain.com/privacy.html">
     <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +16,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/icon-192x192.png" type="image/png">
-    <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -24,8 +23,8 @@
         gtag('js', new Date());
         gtag('config', 'G-XXXXXXXXXX');
     </script>
-    <!-- i18next -->
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -43,8 +42,10 @@
                     <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
                     <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
                     <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
                     <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
                     <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
                     <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
                 </ul>
             </nav>
@@ -59,16 +60,7 @@
     <section class="content">
         <div class="container">
             <h1 data-i18n="privacyTitle">Kebijakan Privasi</h1>
-            <p data-i18n="privacyIntro">Kami di AI Tools Directory berkomitmen untuk melindungi privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi Anda.</p>
-            <h3 data-i18n="dataCollectionTitle">Data yang Kami Kumpulkan</h3>
-            <p data-i18n="dataCollectionText">Kami hanya mengumpulkan data pribadi yang Anda berikan melalui formulir kontak, seperti nama, email, dan pesan. Data ini disimpan di database kami yang aman dan hanya digunakan untuk menanggapi pertanyaan atau saran Anda.</p>
-            <h3 data-i18n="cookiesTitle">Penggunaan Cookie</h3>
-            <p data-i18n="cookiesText">Kami menggunakan cookie untuk menyimpan preferensi pengguna, seperti tema gelap/terang dan riwayat pencarian. Anda dapat menonaktifkan cookie melalui pengaturan browser Anda, tetapi ini dapat memengaruhi pengalaman pengguna.</p>
-            <h3 data-i18n="dataSecurityTitle">Penyimpanan dan Keamanan Data</h3>
-            <p data-i18n="dataSecurityText">Data formulir kontak disimpan di MongoDB Atlas dengan enkripsi. Kami menghapus data yang tidak lagi diperlukan setelah 6 bulan, kecuali jika diminta untuk dihapus lebih awal.</p>
-            <h3 data-i18n="policyChangesTitle">Perubahan Kebijakan</h3>
-            <p data-i18n="policyChangesText">Kami dapat memperbarui kebijakan ini kapan saja. Perubahan akan dipublikasikan di halaman ini, dan Anda disarankan untuk memeriksanya secara berkala.</p>
-            <p data-i18n="contactForPrivacy">Untuk permintaan penghapusan data, hubungi kami di <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a>.</p>
+            <p data-i18n="privacyContent">Kami di AI Tools Directory berkomitmen untuk melindungi privasi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi data pribadi Anda. Kami hanya mengumpulkan data yang diperlukan untuk menyediakan layanan kami, seperti email untuk autentikasi dan pesan kontak.</p>
         </div>
     </section>
 
@@ -77,6 +69,7 @@
             <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
             <div class="footer-links">
                 <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
                 <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
                 <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
                 <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
@@ -89,7 +82,6 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
