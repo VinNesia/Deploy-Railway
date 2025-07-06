@@ -1,0 +1,452 @@
+[
+  {
+    "id": 1,
+    "name": "Writesonic",
+    "description": "AI writing assistant untuk berbagai kebutuhan konten.",
+    "category": "Writing",
+    "url": "https://writesonic.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=writesonic.com",
+    "tags": [
+      "Writing",
+      "Content Creation",
+      "Marketing"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.7
+  },
+  {
+    "id": 2,
+    "name": "DeepL Translator",
+    "description": "AI translator dengan kualitas tinggi.",
+    "category": "Translation",
+    "url": "https://deepl.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=deepl.com",
+    "tags": [
+      "Translation",
+      "Language",
+      "AI Translator"
+    ],
+    "date_added": "2025-06-20",
+    "popularity": 4.8
+  },
+  {
+    "id": 3,
+    "name": "AI Tool 3",
+    "description": "Deskripsi AI Tool 3.",
+    "category": "Various",
+    "url": "https://aitool3.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool3.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 3"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.3
+  },
+  {
+    "id": 4,
+    "name": "AI Tool 4",
+    "description": "Deskripsi AI Tool 4.",
+    "category": "Various",
+    "url": "https://aitool4.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool4.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 4"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.4
+  },
+  {
+    "id": 5,
+    "name": "AI Tool 5",
+    "description": "Deskripsi AI Tool 5.",
+    "category": "Various",
+    "url": "https://aitool5.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool5.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 5"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.5
+  },
+  {
+    "id": 6,
+    "name": "AI Tool 6",
+    "description": "Deskripsi AI Tool 6.",
+    "category": "Various",
+    "url": "https://aitool6.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool6.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 6"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.6
+  },
+  {
+    "id": 7,
+    "name": "AI Tool 7",
+    "description": "Deskripsi AI Tool 7.",
+    "category": "Various",
+    "url": "https://aitool7.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool7.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 7"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.7
+  },
+  {
+    "id": 8,
+    "name": "AI Tool 8",
+    "description": "Deskripsi AI Tool 8.",
+    "category": "Various",
+    "url": "https://aitool8.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool8.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 8"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.8
+  },
+  {
+    "id": 9,
+    "name": "AI Tool 9",
+    "description": "Deskripsi AI Tool 9.",
+    "category": "Various",
+    "url": "https://aitool9.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool9.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 9"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.9
+  },
+  {
+    "id": 10,
+    "name": "AI Tool 10",
+    "description": "Deskripsi AI Tool 10.",
+    "category": "Various",
+    "url": "https://aitool10.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool10.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 10"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.0
+  },
+  {
+    "id": 11,
+    "name": "AI Tool 11",
+    "description": "Deskripsi AI Tool 11.",
+    "category": "Various",
+    "url": "https://aitool11.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool11.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 11"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.1
+  },
+  {
+    "id": 12,
+    "name": "AI Tool 12",
+    "description": "Deskripsi AI Tool 12.",
+    "category": "Various",
+    "url": "https://aitool12.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool12.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 12"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.2
+  },
+  {
+    "id": 13,
+    "name": "AI Tool 13",
+    "description": "Deskripsi AI Tool 13.",
+    "category": "Various",
+    "url": "https://aitool13.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool13.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 13"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.3
+  },
+  {
+    "id": 14,
+    "name": "AI Tool 14",
+    "description": "Deskripsi AI Tool 14.",
+    "category": "Various",
+    "url": "https://aitool14.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool14.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 14"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.4
+  },
+  {
+    "id": 15,
+    "name": "AI Tool 15",
+    "description": "Deskripsi AI Tool 15.",
+    "category": "Various",
+    "url": "https://aitool15.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool15.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 15"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.5
+  },
+  {
+    "id": 16,
+    "name": "AI Tool 16",
+    "description": "Deskripsi AI Tool 16.",
+    "category": "Various",
+    "url": "https://aitool16.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool16.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 16"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.6
+  },
+  {
+    "id": 17,
+    "name": "AI Tool 17",
+    "description": "Deskripsi AI Tool 17.",
+    "category": "Various",
+    "url": "https://aitool17.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool17.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 17"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.7
+  },
+  {
+    "id": 18,
+    "name": "AI Tool 18",
+    "description": "Deskripsi AI Tool 18.",
+    "category": "Various",
+    "url": "https://aitool18.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool18.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 18"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.8
+  },
+  {
+    "id": 19,
+    "name": "AI Tool 19",
+    "description": "Deskripsi AI Tool 19.",
+    "category": "Various",
+    "url": "https://aitool19.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool19.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 19"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.9
+  },
+  {
+    "id": 20,
+    "name": "AI Tool 20",
+    "description": "Deskripsi AI Tool 20.",
+    "category": "Various",
+    "url": "https://aitool20.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool20.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 20"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.0
+  },
+  {
+    "id": 21,
+    "name": "AI Tool 21",
+    "description": "Deskripsi AI Tool 21.",
+    "category": "Various",
+    "url": "https://aitool21.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool21.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 21"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.1
+  },
+  {
+    "id": 22,
+    "name": "AI Tool 22",
+    "description": "Deskripsi AI Tool 22.",
+    "category": "Various",
+    "url": "https://aitool22.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool22.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 22"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.2
+  },
+  {
+    "id": 23,
+    "name": "AI Tool 23",
+    "description": "Deskripsi AI Tool 23.",
+    "category": "Various",
+    "url": "https://aitool23.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool23.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 23"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.3
+  },
+  {
+    "id": 24,
+    "name": "AI Tool 24",
+    "description": "Deskripsi AI Tool 24.",
+    "category": "Various",
+    "url": "https://aitool24.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool24.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 24"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.4
+  },
+  {
+    "id": 25,
+    "name": "AI Tool 25",
+    "description": "Deskripsi AI Tool 25.",
+    "category": "Various",
+    "url": "https://aitool25.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool25.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 25"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.5
+  },
+  {
+    "id": 26,
+    "name": "AI Tool 26",
+    "description": "Deskripsi AI Tool 26.",
+    "category": "Various",
+    "url": "https://aitool26.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool26.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 26"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.6
+  },
+  {
+    "id": 27,
+    "name": "AI Tool 27",
+    "description": "Deskripsi AI Tool 27.",
+    "category": "Various",
+    "url": "https://aitool27.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool27.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 27"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.7
+  },
+  {
+    "id": 28,
+    "name": "AI Tool 28",
+    "description": "Deskripsi AI Tool 28.",
+    "category": "Various",
+    "url": "https://aitool28.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool28.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 28"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.8
+  },
+  {
+    "id": 29,
+    "name": "AI Tool 29",
+    "description": "Deskripsi AI Tool 29.",
+    "category": "Various",
+    "url": "https://aitool29.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool29.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 29"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.9
+  },
+  {
+    "id": 30,
+    "name": "AI Tool 30",
+    "description": "Deskripsi AI Tool 30.",
+    "category": "Various",
+    "url": "https://aitool30.com",
+    "thumbnail": "https://www.google.com/s2/favicons?domain=aitool30.com",
+    "tags": [
+      "AI",
+      "Tool",
+      "Feature 30"
+    ],
+    "date_added": "2025-07-06",
+    "popularity": 4.0
+  }
+]
