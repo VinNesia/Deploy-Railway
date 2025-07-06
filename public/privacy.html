@@ -19,13 +19,22 @@
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="about.html">Tentang</a></li>
                 <li><a href="login.html">Masuk</a></li>
+                <li><a href="admin.html">Admin</a></li>
             </ul>
         </nav>
         <div class="user-actions">
             <div class="search-bar">
-                <input type="text" placeholder="Cari AI Tools...">
+                <input type="text" placeholder="Cari AI Tools (contoh: design, writer)...">
+                <select>
+                    <option value="">Semua Kategori</option>
+                    <option value="design">Desain</option>
+                    <option value="writing">Penulisan</option>
+                    <option value="data">Analisis Data</option>
+                </select>
                 <button><span class="material-icons">search</span></button>
             </div>
+            <a href="login.html" class="login-btn" id="loginBtn">Masuk</a>
+            <a href="bookmarks.html" class="login-btn" id="bookmarksBtn" style="display: none;">Bookmark</a>
         </div>
     </header>
 
@@ -67,7 +76,10 @@
         <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
     </footer>
 
-    <script src="firebase-config.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-analytics.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
