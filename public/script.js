@@ -1,322 +1,583 @@
-// Inisialisasi i18next untuk multibahasa
+// Inisialisasi i18next
 i18next.init({
     lng: localStorage.getItem('language') || 'id',
     resources: {
-        id: { translation: fetch('/locales/id.json').then(res => res.json()) },
-        en: { translation: fetch('/locales/en.json').then(res => res.json()) }
+        id: { translation: await fetch('/locales/id.json').then(res => res.json()) },
+        en: { translation: await fetch('/locales/en.json').then(res => res.json()) }
     }
-}).then(() => updateContent());
+}, function(err, t) {
+    updateContent();
+});
 
+// Fungsi untuk memperbarui konten multibahasa
 function updateContent() {
     document.querySelectorAll('[data-i18n]').forEach(element => {
         const key = element.getAttribute('data-i18n');
-        element.innerHTML = i18next.t(key);
+        element.textContent = i18next.t(key);
     });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-i18n-placeholder');
+    document.querySelectorAll('[data-i18n\\[placeholder\\]]').forEach(element => {
+        const key = element.getAttribute('data-i18n[placeholder]');
         element.placeholder = i18next.t(key);
     });
 }
 
-// Inisialisasi EmailJS
-emailjs.init("your-emailjs-user-id"); // Ganti dengan User ID EmailJS Anda
+// Inisialisasi Firebase
+const firebaseConfig = {
+    // Ganti dengan konfigurasi Firebase Anda
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const auth = firebase.auth();
+const analytics = firebase.analytics();
 
 // Variabel global
 let currentPage = 1;
-const toolsPerPage = 9;
-let toolsData = [];
+const itemsPerPage = 6;
+let currentBlogPage = 1;
+let allTools = [];
+let allPosts = [];
 
-// Fungsi untuk log analitik
-function logEvent(eventName, params) {
-    gtag('event', eventName, params);
-}
-
-// Fungsi untuk log navigasi halaman
-function logPageNavigation(page) {
-    logEvent('page_view', { page_name: page });
-}
-
-// Fungsi untuk log pencarian
-function logSearch(query) {
-    logEvent('search', { search_term: query });
-}
-
-// Fungsi untuk log bookmark
-function logBookmarkAdded(toolId) {
-    logEvent('bookmark_added', { tool_id: toolId });
-}
-
-// Fungsi untuk log ulasan
-function logReviewSubmitted(toolId) {
-    logEvent('review_submitted', { tool_id: toolId });
-}
-
-// Fungsi untuk log perubahan tema
-function logThemeChanged(theme) {
-    logEvent('theme_changed', { theme: theme });
-}
-
-// Fungsi untuk log waktu interaksi
-function logInteractionTime(page, duration) {
-    logEvent('interaction_time', { page_name: page, duration: duration });
-}
-
-// Fungsi untuk memperbarui meta tag dinamis
-function updateToolMeta(tool) {
-    document.querySelector('meta[name="description"]').setAttribute('content', tool.description);
-    document.querySelector('meta[property="og:title"]').setAttribute('content', tool.name);
-    document.querySelector('meta[property="og:description"]').setAttribute('content', tool.description);
-    document.querySelector('meta[property="og:image"]').setAttribute('content', tool.image || 'https://your-domain.com/images/og-image.webp');
-    document.querySelector('meta[property="og:url"]').setAttribute('content', window.location.href);
-    document.title = `${tool.name} - AI Tools Directory`;
-}
-
-// Fungsi untuk mengambil data tools
-async function fetchTools() {
-    const toolsGrid = document.getElementById('toolsGrid');
-    const loading = document.getElementById('loading');
-    if (!toolsGrid || !loading) return;
-
-    loading.style.display = 'block';
-    try {
-        const snapshot = await firebase.database().ref('tools').once('value');
-        toolsData = [];
-        snapshot.forEach(child => {
-            toolsData.push({ id: child.key, ...child.val() });
-        });
-        filterAndSortTools();
-    } catch (error) {
-        console.error('Error fetching tools:', error);
-        toolsGrid.innerHTML = `<p data-i18n="errorLoading">${i18next.t('errorLoading')}</p>`;
-    } finally {
-        loading.style.display = 'none';
-    }
-}
-
-// Fungsi untuk filter dan sort tools
-function filterAndSortTools() {
-    const category = document.getElementById('categoryFilter')?.value || 'all';
-    const sort = document.getElementById('sortFilter')?.value || 'name';
-    let filteredTools = [...toolsData];
-
-    if (category !== 'all') {
-        filteredTools = filteredTools.filter(tool => tool.category === category);
-    }
-
-    const searchQuery = document.getElementById('searchInput')?.value.toLowerCase() || '';
-    if (searchQuery) {
-        filteredTools = filteredTools.filter(tool =>
-            tool.name.toLowerCase().includes(searchQuery) ||
-            tool.description.toLowerCase().includes(searchQuery)
-        );
-        logSearch(searchQuery);
-    }
-
-    filteredTools.sort((a, b) => {
-        if (sort === 'name') return a.name.localeCompare(b.name);
-        if (sort === 'category') return a.category.localeCompare(b.category);
-        if (sort === 'rating') {
-            const ratingA = a.rating || 0;
-            const ratingB = b.rating || 0;
-            return ratingB - ratingA;
-        }
-        return 0;
+// Inisialisasi Service Worker
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(error => {
+        console.error('Service Worker registration failed:', error);
     });
-
-    displayTools(filteredTools);
 }
 
-// Fungsi untuk menampilkan tools
-function displayTools(tools) {
+// Inisialisasi Push Notifications
+function initPushNotifications() {
+    const messaging = firebase.messaging();
+    messaging.requestPermission().then(() => {
+        return messaging.getToken();
+    }).then(token => {
+        console.log('Push token:', token);
+        // Kirim token ke server jika diperlukan
+    }).catch(error => {
+        console.error('Error getting push token:', error);
+    });
+}
+
+// Tema Gelap/Terang
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+}
+
+// Ganti Bahasa
+const languageSelect = document.getElementById('languageSelect');
+if (languageSelect) {
+    languageSelect.addEventListener('change', (e) => {
+        i18next.changeLanguage(e.target.value, () => {
+            localStorage.setItem('language', e.target.value);
+            updateContent();
+        });
+    });
+}
+
+// Navigasi Hamburger
+const navToggle = document.querySelector('.nav-toggle');
+const nav = document.querySelector('nav');
+if (navToggle && nav) {
+    navToggle.addEventListener('click', () => {
+        nav.classList.toggle('active');
+    });
+}
+
+// Autentikasi
+auth.onAuthStateChanged(user => {
+    const loginLink = document.getElementById('loginLink');
+    const adminLink = document.getElementById('adminLink');
+    const logoutButton = document.getElementById('logoutButton');
+    if (user) {
+        loginLink.style.display = 'none';
+        logoutButton.style.display = 'block';
+        if (user.email === 'admin@aitoolsdirectory.com') {
+            adminLink.style.display = 'block';
+        }
+        loadBookmarks();
+        initPushNotifications();
+    } else {
+        loginLink.style.display = 'block';
+        logoutButton.style.display = 'none';
+        adminLink.style.display = 'none';
+    }
+});
+
+// Login
+document.getElementById('loginButton')?.addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            Swal.fire(i18next.t('loginSuccess'), '', 'success');
+            setTimeout(() => location.href = 'index.html', 1000);
+        })
+        .catch(error => {
+            document.getElementById('authError').style.display = 'block';
+            document.getElementById('authError').textContent = i18next.t('loginError') + ': ' + error.message;
+        });
+});
+
+// Register
+document.getElementById('registerButton')?.addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            Swal.fire(i18next.t('registerSuccess'), '', 'success');
+            setTimeout(() => location.href = 'index.html', 1000);
+        })
+        .catch(error => {
+            document.getElementById('authError').style.display = 'block';
+            document.getElementById('authError').textContent = i18next.t('registerError') + ': ' + error.message;
+        });
+});
+
+// Logout
+document.getElementById('logoutButton')?.addEventListener('click', () => {
+    auth.signOut()
+        .then(() => {
+            Swal.fire(i18next.t('logoutSuccess'), '', 'success');
+            setTimeout(() => location.href = 'index.html', 1000);
+        })
+        .catch(error => {
+            Swal.fire(i18next.t('logoutError'), error.message, 'error');
+        });
+});
+
+// Load Tools
+async function loadTools() {
+    document.getElementById('loading').style.display = 'block';
+    try {
+        const response = await fetch('/api/tools');
+        allTools = await response.json();
+        renderTools(allTools);
+    } catch (error) {
+        Swal.fire(i18next.t('errorLoading'), error.message, 'error');
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+    }
+}
+
+// Render Tools
+function renderTools(tools) {
     const toolsGrid = document.getElementById('toolsGrid');
     if (!toolsGrid) return;
-
-    const start = (currentPage - 1) * toolsPerPage;
-    const end = start + toolsPerPage;
+    toolsGrid.innerHTML = '';
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
     const paginatedTools = tools.slice(start, end);
 
-    toolsGrid.innerHTML = '';
     paginatedTools.forEach(tool => {
-        const toolCard = document.createElement('div');
-        toolCard.className = 'tool-card';
-        toolCard.innerHTML = `
+        const card = document.createElement('div');
+        card.className = 'tool-card';
+        card.innerHTML = `
             <img src="${tool.image || '/images/placeholder.webp'}" alt="${tool.name}" loading="lazy">
             <h3>${tool.name}</h3>
-            <p>${tool.description.slice(0, 100)}...</p>
-            <span class="tag" data-i18n="${tool.category}">${i18next.t(tool.category)}</span>
-            <p data-i18n="rating">Rating: ${tool.rating || i18next.t('noRating')}</p>
+            <p>${tool.description.substring(0, 100)}...</p>
+            <p class="tag">${tool.category}</p>
             <a href="tool.html?id=${tool.id}" class="btn" data-i18n="viewDetails">Lihat Detail</a>
         `;
-        toolsGrid.appendChild(toolCard);
+        toolsGrid.appendChild(card);
     });
 
     updatePagination(tools.length);
 }
 
-// Fungsi untuk memperbarui pagination
-function updatePagination(totalTools) {
-    const totalPages = Math.ceil(totalTools / toolsPerPage);
+// Update Pagination
+function updatePagination(totalItems) {
     const pageInfo = document.getElementById('pageInfo');
     const prevPage = document.getElementById('prevPage');
     const nextPage = document.getElementById('nextPage');
-
-    if (pageInfo) {
-        pageInfo.textContent = `${i18next.t('page')} ${currentPage} ${i18next.t('of')} ${totalPages}`;
-    }
-
-    if (prevPage) prevPage.disabled = currentPage === 1;
-    if (nextPage) nextPage.disabled = currentPage === totalPages || totalPages === 0;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    pageInfo.textContent = `Halaman ${currentPage} dari ${totalPages}`;
+    prevPage.disabled = currentPage === 1;
+    nextPage.disabled = currentPage === totalPages;
 }
 
-// Fungsi untuk mengubah halaman
+// Change Page
 function changePage(direction) {
     currentPage += direction;
-    filterAndSortTools();
+    if (currentPage < 1) currentPage = 1;
+    renderTools(allTools);
 }
 
-// Fungsi untuk pencarian
-function searchTools() {
-    currentPage = 1;
-    filterAndSortTools();
+// Load Blog Posts
+async function loadBlogPosts() {
+    document.getElementById('loading').style.display = 'block';
+    try {
+        const response = await fetch('/api/blog-posts');
+        allPosts = await response.json();
+        renderBlogPosts(allPosts);
+    } catch (error) {
+        Swal.fire(i18next.t('errorLoading'), error.message, 'error');
+    } finally {
+        document.getElementById('loading').style.display = 'none';
+    }
 }
 
-// Fungsi untuk memuat detail tool
+// Render Blog Posts
+function renderBlogPosts(posts) {
+    const blogGrid = document.getElementById('blogGrid');
+    const blogContent = document.getElementById('blogContent');
+    if (!blogGrid || !blogContent) return;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
+
+    if (postId) {
+        const post = allPosts.find(p => p.id === postId);
+        if (post) {
+            blogGrid.style.display = 'none';
+            blogContent.style.display = 'block';
+            document.getElementById('blogTitle').textContent = post.title;
+            document.getElementById('blogImage').src = post.image || '/images/placeholder.webp';
+            document.getElementById('blogImage').alt = post.title;
+            document.getElementById('blogDate').textContent = new Date(post.date).toLocaleDateString();
+            document.getElementById('blogBody').innerHTML = post.body;
+
+            // Update SEO
+            document.querySelector('meta[name="description"]').content = post.description.substring(0, 160);
+            document.querySelector('meta[name="keywords"]').content = post.tags.join(', ');
+            document.querySelector('meta[property="og:title"]').content = post.title;
+            document.querySelector('meta[property="og:description"]').content = post.description.substring(0, 160);
+            document.querySelector('meta[property="og:image"]').content = post.image || '/images/og-image.webp';
+            document.querySelector('meta[property="og:url"]').content = window.location.href;
+            document.title = `${post.title} - AI Tools Directory`;
+
+            loadComments(postId);
+        } else {
+            blogContent.innerHTML = `<p data-i18n="postNotFound">Artikel tidak ditemukan</p>`;
+        }
+    } else {
+        blogGrid.style.display = 'grid';
+        blogContent.style.display = 'none';
+        blogGrid.innerHTML = '';
+        const start = (currentBlogPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedPosts = posts.slice(start, end);
+
+        paginatedPosts.forEach(post => {
+            const card = document.createElement('div');
+            card.className = 'blog-card';
+            card.innerHTML = `
+                <img src="${post.image || '/images/placeholder.webp'}" alt="${post.title}" loading="lazy">
+                <h3>${post.title}</h3>
+                <p>${post.description.substring(0, 100)}...</p>
+                <p class="tag">${post.tags.join(', ')}</p>
+                <a href="blog.html?id=${post.id}" class="btn" data-i18n="viewDetails">Lihat Detail</a>
+            `;
+            blogGrid.appendChild(card);
+        });
+
+        updateBlogPagination(posts.length);
+    }
+}
+
+// Update Blog Pagination
+function updateBlogPagination(totalItems) {
+    const pageInfo = document.getElementById('pageInfo');
+    const prevPage = document.getElementById('prevPage');
+    const nextPage = document.getElementById('nextPage');
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    pageInfo.textContent = `Halaman ${currentBlogPage} dari ${totalPages}`;
+    prevPage.disabled = currentBlogPage === 1;
+    nextPage.disabled = currentBlogPage === totalPages;
+}
+
+// Change Blog Page
+function changeBlogPage(direction) {
+    currentBlogPage += direction;
+    if (currentBlogPage < 1) currentBlogPage = 1;
+    renderBlogPosts(allPosts);
+}
+
+// Load Comments
+async function loadComments(postId) {
+    const commentsList = document.getElementById('commentsList');
+    if (!commentsList) return;
+    commentsList.innerHTML = '';
+    try {
+        const snapshot = await database.ref(`blog_comments/${postId}`).once('value');
+        snapshot.forEach(child => {
+            const comment = child.val();
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment';
+            commentDiv.innerHTML = `
+                <p><strong>${comment.user}</strong></p>
+                <p>${comment.text}</p>
+                <p class="comment-date">${new Date(comment.timestamp).toLocaleString()}</p>
+            `;
+            commentsList.appendChild(commentDiv);
+        });
+    } catch (error) {
+        Swal.fire(i18next.t('errorLoading'), error.message, 'error');
+    }
+}
+
+// Submit Comment
+document.getElementById('commentForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
+    if (!user) {
+        Swal.fire(i18next.t('loginRequired'), '', 'warning');
+        return;
+    }
+    const comment = document.getElementById('comment').value;
+    const postId = new URLSearchParams(window.location.search).get('id');
+    try {
+        await database.ref(`blog_comments/${postId}`).push({
+            user: user.email,
+            text: comment,
+            timestamp: new Date().toISOString()
+        });
+        document.getElementById('commentForm').reset();
+        Swal.fire(i18next.t('commentSubmitted'), '', 'success');
+        loadComments(postId);
+    } catch (error) {
+        document.getElementById('commentError').style.display = 'block';
+        document.getElementById('commentError').textContent = i18next.t('commentError') + ': ' + error.message;
+    }
+});
+
+// Search Blog
+function searchBlog() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredPosts = allPosts.filter(post => 
+        post.title.toLowerCase().includes(searchTerm) || 
+        post.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+    );
+    currentBlogPage = 1;
+    renderBlogPosts(filteredPosts);
+}
+
+// Share Blog
+function shareBlog(platform) {
+    const url = window.location.href;
+    const title = document.getElementById('blogTitle').textContent;
+    let shareUrl;
+    switch (platform) {
+        case 'twitter':
+            shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+            break;
+        case 'facebook':
+            shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+            break;
+        case 'linkedin':
+            shareUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+            break;
+    }
+    window.open(shareUrl, '_blank');
+}
+
+// Load Tool Details
 async function loadToolDetails() {
     const urlParams = new URLSearchParams(window.location.search);
     const toolId = urlParams.get('id');
-    const toolName = document.getElementById('toolName');
-    const toolImage = document.getElementById('toolImage');
-    const toolDescription = document.getElementById('toolDescription');
-    const toolCategory = document.getElementById('toolCategory');
-    const toolRating = document.getElementById('toolRating');
-    const toolLink = document.getElementById('toolLink');
-    const reviewsList = document.getElementById('reviewsList');
-
-    if (!toolId || !toolName || !toolImage || !toolDescription || !toolCategory || !toolRating || !toolLink || !reviewsList) return;
-
+    if (!toolId) return;
+    document.getElementById('loading').style.display = 'block';
     try {
-        const snapshot = await firebase.database().ref(`tools/${toolId}`).once('value');
-        if (snapshot.exists()) {
-            const tool = snapshot.val();
-            toolName.textContent = tool.name;
-            toolImage.src = tool.image || '/images/placeholder.webp';
-            toolImage.alt = tool.name;
-            toolDescription.textContent = tool.description;
-            toolCategory.textContent = i18next.t(tool.category);
-            toolCategory.className = 'tag';
-            toolRating.textContent = `${i18next.t('rating')}: ${tool.rating || i18next.t('noRating')}`;
-            toolLink.href = tool.url;
-            updateToolMeta({ ...tool, id: toolId });
+        const response = await fetch(`/api/tools/${toolId}`);
+        const tool = await response.json();
+        document.getElementById('toolName').textContent = tool.name;
+        document.getElementById('toolImage').src = tool.image || '/images/placeholder.webp';
+        document.getElementById('toolImage').alt = tool.name;
+        document.getElementById('toolDescription').textContent = tool.description;
+        document.getElementById('toolCategory').textContent = tool.category;
+        document.getElementById('toolRating').textContent = tool.rating ? `Rating: ${tool.rating}/5` : i18next.t('noRating');
+        document.getElementById('toolLink').href = tool.url;
 
-            // Load ulasan
-            const reviewsSnapshot = await firebase.database().ref(`tools/${toolId}/reviews`).once('value');
-            reviewsList.innerHTML = '';
-            reviewsSnapshot.forEach(review => {
-                const reviewData = review.val();
-                const reviewItem = document.createElement('div');
-                reviewItem.className = 'review-item';
-                reviewItem.innerHTML = `
-                    <p><strong>${i18next.t('rating')}:</strong> ${reviewData.rating}/5</p>
-                    <p>${reviewData.comment}</p>
-                    <p><small>${new Date(reviewData.timestamp).toLocaleString()}</small></p>
-                `;
-                reviewsList.appendChild(reviewItem);
-            });
-        } else {
-            toolName.textContent = i18next.t('toolNotFound');
-        }
+        // Update SEO
+        document.querySelector('meta[name="description"]').content = tool.description.substring(0, 160);
+        document.querySelector('meta[name="keywords"]').content = tool.tags.join(', ');
+        document.querySelector('meta[property="og:title"]').content = tool.name;
+        document.querySelector('meta[property="og:description"]').content = tool.description.substring(0, 160);
+        document.querySelector('meta[property="og:image"]').content = tool.image || '/images/og-image.webp';
+        document.querySelector('meta[property="og:url"]').content = window.location.href;
+        document.title = `${tool.name} - AI Tools Directory`;
+
+        loadReviews(toolId);
     } catch (error) {
-        console.error('Error loading tool details:', error);
-        toolName.textContent = i18next.t('errorLoading');
+        Swal.fire(i18next.t('toolNotFound'), error.message, 'error');
+    } finally {
+        document.getElementById('loading').style.display = 'none';
     }
 }
 
-// Fungsi untuk menyimpan bookmark
-async function saveBookmark(toolId) {
-    const user = firebase.auth().currentUser;
+// Load Reviews
+async function loadReviews(toolId) {
+    const reviewsList = document.getElementById('reviewsList');
+    if (!reviewsList) return;
+    reviewsList.innerHTML = '';
+    try {
+        const snapshot = await database.ref(`tools/${toolId}/reviews`).once('value');
+        snapshot.forEach(child => {
+            const review = child.val();
+            const reviewDiv = document.createElement('div');
+            reviewDiv.className = 'review';
+            reviewDiv.innerHTML = `
+                <p><strong>${review.user}</strong>: ${review.rating}/5</p>
+                <p>${review.comment}</p>
+            `;
+            reviewsList.appendChild(reviewDiv);
+        });
+    } catch (error) {
+        Swal.fire(i18next.t('errorLoading'), error.message, 'error');
+    }
+}
+
+// Submit Review
+document.getElementById('reviewForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const user = auth.currentUser;
     if (!user) {
-        alert(i18next.t('loginRequired'));
-        window.location.href = 'login.html';
+        Swal.fire(i18next.t('loginRequired'), '', 'warning');
         return;
     }
+    const rating = document.getElementById('rating').value;
+    const comment = document.getElementById('comment').value;
+    const toolId = new URLSearchParams(window.location.search).get('id');
     try {
-        const bookmarkRef = firebase.firestore().collection('bookmarks').doc(user.uid);
-        const doc = await bookmarkRef.get();
-        let tools = doc.exists ? doc.data().tools || [] : [];
-        if (!tools.includes(toolId)) {
-            tools.push(toolId);
-            await bookmarkRef.set({ tools }, { merge: true });
-            alert(i18next.t('bookmarkSaved'));
-            logBookmarkAdded(toolId);
-        }
+        await database.ref(`tools/${toolId}/reviews`).push({
+            user: user.email,
+            rating: parseInt(rating),
+            comment,
+            timestamp: new Date().toISOString()
+        });
+        document.getElementById('reviewForm').reset();
+        Swal.fire(i18next.t('reviewSubmitted'), '', 'success');
+        loadReviews(toolId);
     } catch (error) {
-        console.error('Error saving bookmark:', error);
-        alert(i18next.t('bookmarkError'));
+        document.getElementById('reviewError').style.display = 'block';
+        document.getElementById('reviewError').textContent = i18next.t('reviewError') + ': ' + error.message;
     }
-}
+});
 
-// Fungsi untuk memuat bookmark
+// Load Bookmarks
 async function loadBookmarks() {
-    const user = firebase.auth().currentUser;
     const bookmarksGrid = document.getElementById('bookmarksGrid');
-    if (!user || !bookmarksGrid) {
+    if (!bookmarksGrid) return;
+    bookmarksGrid.innerHTML = '';
+    const user = auth.currentUser;
+    if (!user) {
         bookmarksGrid.innerHTML = `<p data-i18n="loginRequired">${i18next.t('loginRequired')}</p>`;
         return;
     }
-
     try {
-        const doc = await firebase.firestore().collection('bookmarks').doc(user.uid).get();
-        if (doc.exists) {
-            const bookmarkedToolIds = doc.data().tools || [];
-            const bookmarkedTools = [];
-
-            for (const toolId of bookmarkedToolIds) {
-                const toolRef = firebase.database().ref(`tools/${toolId}`);
-                const snapshot = await toolRef.once('value');
-                if (snapshot.exists()) {
-                    bookmarkedTools.push({ id: toolId, ...snapshot.val() });
-                }
-            }
-
-            displayTools(bookmarkedTools);
-        } else {
+        const snapshot = await database.ref(`users/${user.uid}/bookmarks`).once('value');
+        const bookmarks = [];
+        snapshot.forEach(child => {
+            bookmarks.push(child.val());
+        });
+        if (bookmarks.length === 0) {
             bookmarksGrid.innerHTML = `<p data-i18n="noBookmarks">${i18next.t('noBookmarks')}</p>`;
+            return;
         }
+        bookmarks.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'tool-card';
+            card.innerHTML = `
+                <img src="${tool.image || '/images/placeholder.webp'}" alt="${tool.name}" loading="lazy">
+                <h3>${tool.name}</h3>
+                <p>${tool.description.substring(0, 100)}...</p>
+                <p class="tag">${tool.category}</p>
+                <a href="tool.html?id=${tool.id}" class="btn" data-i18n="viewDetails">Lihat Detail</a>
+                <button class="btn" onclick="removeBookmark('${tool.id}')" data-i18n="removeBookmark">Hapus</button>
+            `;
+            bookmarksGrid.appendChild(card);
+        });
     } catch (error) {
-        console.error('Error loading bookmarks:', error);
-        bookmarksGrid.innerHTML = `<p data-i18n="errorBookmarks">${i18next.t('errorBookmarks')}</p>`;
+        Swal.fire(i18next.t('errorBookmarks'), error.message, 'error');
     }
 }
 
-// Fungsi untuk mengirim ulasan
-async function submitReview(toolId, rating, comment) {
-    const user = firebase.auth().currentUser;
+// Bookmark Tool
+document.getElementById('bookmarkTool')?.addEventListener('click', async () => {
+    const user = auth.currentUser;
     if (!user) {
-        alert(i18next.t('loginRequired'));
-        window.location.href = 'login.html';
+        Swal.fire(i18next.t('loginRequired'), '', 'warning');
         return;
     }
+    const toolId = new URLSearchParams(window.location.search).get('id');
     try {
-        await firebase.database().ref(`tools/${toolId}/reviews`).push({
-            userId: user.uid,
-            rating: parseInt(rating),
-            comment: comment,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
-        });
-        document.getElementById('reviewError').style.display = 'none';
-        alert(i18next.t('reviewSubmitted'));
-        logReviewSubmitted(toolId);
-        loadToolDetails();
+        const response = await fetch(`/api/tools/${toolId}`);
+        const tool = await response.json();
+        await database.ref(`users/${user.uid}/bookmarks/${toolId}`).set(tool);
+        Swal.fire(i18next.t('bookmarkSaved'), '', 'success');
     } catch (error) {
-        console.error('Error submitting review:', error);
-        document.getElementById('reviewError').style.display = 'block';
-        document.getElementById('reviewError').textContent = i18next.t('reviewError');
+        Swal.fire(i18next.t('bookmarkError'), error.message, 'error');
+    }
+});
+
+// Remove Bookmark
+async function removeBookmark(toolId) {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+        await database.ref(`users/${user.uid}/bookmarks/${toolId}`).remove();
+        Swal.fire(i18next.t('bookmarkRemoved'), '', 'success');
+        loadBookmarks();
+    } catch (error) {
+        Swal.fire(i18next.t('bookmarkError'), error.message, 'error');
     }
 }
 
-// Fungsi untuk mengirim formulir kontak
-async function submitContactForm(name, email, message) {
+// Search Tools
+function searchTools() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const filteredTools = allTools.filter(tool => 
+        tool.name.toLowerCase().includes(searchTerm) || 
+        tool.description.toLowerCase().includes(searchTerm) || 
+        tool.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+    );
+    currentPage = 1;
+    renderTools(filteredTools);
+}
+
+// Filter Tools
+document.getElementById('categoryFilter')?.addEventListener('change', filterTools);
+document.getElementById('tagFilter')?.addEventListener('input', filterTools);
+document.getElementById('sortFilter')?.addEventListener('change', filterTools);
+
+function filterTools() {
+    const category = document.getElementById('categoryFilter')?.value;
+    const tag = document.getElementById('tagFilter')?.value.toLowerCase();
+    const sort = document.getElementById('sortFilter')?.value;
+
+    let filteredTools = allTools;
+    if (category && category !== 'all') {
+        filteredTools = filteredTools.filter(tool => tool.category === category);
+    }
+    if (tag) {
+        filteredTools = filteredTools.filter(tool => 
+            tool.tags.some(t => t.toLowerCase().includes(tag))
+        );
+    }
+    if (sort) {
+        filteredTools.sort((a, b) => {
+            if (sort === 'name') return a.name.localeCompare(b.name);
+            if (sort === 'category') return a.category.localeCompare(b.category);
+            if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
+        });
+    }
+    currentPage = 1;
+    renderTools(filteredTools);
+}
+
+// Submit Contact Form
+document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
     const recaptchaResponse = grecaptcha.getResponse();
+
     if (!recaptchaResponse) {
         document.getElementById('formError').style.display = 'block';
         document.getElementById('formError').textContent = i18next.t('recaptchaRequired');
@@ -324,270 +585,146 @@ async function submitContactForm(name, email, message) {
     }
 
     try {
-        // Kirim ke backend
-        const response = await fetch('/api/contact', {
+        const response = await fetch('/api/csrf-token');
+        const { csrfToken } = await response.json();
+        document.getElementById('csrfToken').value = csrfToken;
+
+        const formData = { name, email, message, recaptchaResponse, _csrf: csrfToken };
+        const submitResponse = await fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, message, recaptchaResponse })
+            body: JSON.stringify(formData)
         });
-        const result = await response.json();
-        if (response.ok) {
-            // Kirim email via EmailJS
-            await emailjs.send('service_zrumu1h', 'template_b3ayww4', {
-                from_name: name,
-                from_email: email,
-                message: message
-            });
-            document.getElementById('formError').style.display = 'none';
-            alert(i18next.t('messageSent'));
-            logEvent('contact_form_submitted', { email: email });
+        const result = await submitResponse.json();
+        if (submitResponse.ok) {
+            Swal.fire(i18next.t('messageSent'), '', 'success');
+            document.getElementById('contactForm').reset();
+            grecaptcha.reset();
         } else {
             throw new Error(result.error);
         }
     } catch (error) {
-        console.error('Error submitting contact form:', error);
         document.getElementById('formError').style.display = 'block';
-        document.getElementById('formError').textContent = `${i18next.t('formError')} ${error.message}`;
+        document.getElementById('formError').textContent = i18next.t('formError') + ': ' + error.message;
     }
-}
+});
 
-// Fungsi untuk autentikasi
-async function login(email, password) {
+// Admin: Load Tools
+async function loadAdminTools() {
+    const adminContent = document.getElementById('adminContent');
+    const authMessage = document.getElementById('authMessage');
+    if (auth.currentUser?.email !== 'admin@aitoolsdirectory.com') {
+        authMessage.style.display = 'block';
+        return;
+    }
+    adminContent.style.display = 'block';
+    const toolsList = document.getElementById('toolsList');
     try {
-        await firebase.auth().signInWithEmailAndPassword(email, password);
-        document.getElementById('authError').style.display = 'none';
-        alert(i18next.t('loginSuccess'));
-        window.location.href = 'index.html';
-        logEvent('login', { method: 'email' });
+        const response = await fetch('/api/tools');
+        const tools = await response.json();
+        toolsList.innerHTML = '';
+        tools.forEach(tool => {
+            const card = document.createElement('div');
+            card.className = 'tool-card';
+            card.innerHTML = `
+                <h3>${tool.name}</h3>
+                <p>${tool.description.substring(0, 100)}...</p>
+                <button class="btn" onclick="editTool('${tool.id}')" data-i18n="editTool">Edit</button>
+                <button class="btn" onclick="deleteTool('${tool.id}')" data-i18n="deleteTool">Hapus</button>
+            `;
+            toolsList.appendChild(card);
+        });
     } catch (error) {
-        console.error('Login error:', error);
-        document.getElementById('authError').style.display = 'block';
-        document.getElementById('authError').textContent = i18next.t('loginError') + ': ' + error.message;
+        Swal.fire(i18next.t('errorLoading'), error.message, 'error');
     }
 }
 
-async function register(email, password) {
+// Admin: Edit Tool
+async function editTool(toolId) {
     try {
-        await firebase.auth().createUserWithEmailAndPassword(email, password);
-        document.getElementById('authError').style.display = 'none';
-        alert(i18next.t('registerSuccess'));
-        window.location.href = 'index.html';
-        logEvent('sign_up', { method: 'email' });
+        const response = await fetch(`/api/tools/${toolId}`);
+        const tool = await response.json();
+        document.getElementById('toolId').value = tool.id;
+        document.getElementById('toolName').value = tool.name;
+        document.getElementById('toolDescription').value = tool.description;
+        document.getElementById('toolCategory').value = tool.category;
+        document.getElementById('toolTags').value = tool.tags.join(', ');
+        document.getElementById('toolUrl').value = tool.url;
+        document.getElementById('toolImage').value = tool.image;
     } catch (error) {
-        console.error('Register error:', error);
-        document.getElementById('authError').style.display = 'block';
-        document.getElementById('authError').textContent = i18next.t('registerError') + ': ' + error.message;
+        Swal.fire(i18next.t('errorLoading'), error.message, 'error');
     }
 }
 
-function logout() {
-    firebase.auth().signOut().then(() => {
-        alert(i18next.t('logoutSuccess'));
-        window.location.href = 'index.html';
-        logEvent('logout', {});
-    }).catch(error => {
-        console.error('Logout error:', error);
-        alert(i18next.t('logoutError'));
-    });
-}
-
-// Fungsi untuk inisialisasi notifikasi push
-function initPushNotifications() {
-    const messaging = firebase.messaging();
-    Notification.requestPermission().then(permission => {
-        if (permission === 'granted') {
-            messaging.getToken({ vapidKey: 'your-vapid-key' }).then(token => {
-                console.log('Push token:', token);
-                // Simpan token ke Firestore untuk mengirim notifikasi nanti
-                const user = firebase.auth().currentUser;
-                if (user) {
-                    firebase.firestore().collection('users').doc(user.uid).set({
-                        pushToken: token
-                    }, { merge: true });
+// Admin: Delete Tool
+async function deleteTool(toolId) {
+    Swal.fire({
+        title: i18next.t('confirmDelete'),
+        text: i18next.t('confirmDeleteText'),
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: i18next.t('deleteTool'),
+        cancelButtonText: i18next.t('cancel')
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`/api/admin/tools/${toolId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${await auth.currentUser.getIdToken()}` }
+                });
+                if (response.ok) {
+                    Swal.fire(i18next.t('toolDeleted'), '', 'success');
+                    loadAdminTools();
+                } else {
+                    throw new Error((await response.json()).error);
                 }
-            }).catch(error => console.error('Error getting push token:', error));
+            } catch (error) {
+                Swal.fire(i18next.t('errorDeleting'), error.message, 'error');
+            }
         }
     });
 }
 
-// Fungsi untuk menampilkan PWA install prompt
-let deferredPrompt;
-function showInstallPrompt() {
-    if (deferredPrompt) {
-        const installPrompt = document.createElement('div');
-        installPrompt.className = 'install-prompt';
-        installPrompt.innerHTML = `
-            <p data-i18n="installPrompt">Install aplikasi AI Tools Directory untuk akses lebih cepat!</p>
-            <button onclick="installApp()">Install</button>
-        `;
-        document.body.appendChild(installPrompt);
-    }
-}
+// Admin: Submit Tool
+document.getElementById('toolForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('toolId').value;
+    const name = document.getElementById('toolName').value;
+    const description = document.getElementById('toolDescription').value;
+    const category = document.getElementById('toolCategory').value;
+    const tags = document.getElementById('toolTags').value.split(',').map(tag => tag.trim());
+    const url = document.getElementById('toolUrl').value;
+    const image = document.getElementById('toolImage').value;
 
-function installApp() {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(choice => {
-        if (choice.outcome === 'accepted') {
-            logEvent('pwa_installed', {});
+    if (!name || !description || !category || !url) {
+        Swal.fire(i18next.t('fillAllFields'), '', 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/admin/tools', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
+            },
+            body: JSON.stringify({ id, name, description, category, tags, url, image })
+        });
+        if (response.ok) {
+            Swal.fire(id ? i18next.t('toolUpdated') : i18next.t('toolAdded'), '', 'success');
+            document.getElementById('toolForm').reset();
+            loadAdminTools();
+        } else {
+            throw new Error((await response.json()).error);
         }
-        document.querySelector('.install-prompt').remove();
-        deferredPrompt = null;
-    });
-}
-
-// Event listener untuk PWA install prompt
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    showInstallPrompt();
-});
-
-// Event listener untuk perubahan autentikasi
-firebase.auth().onAuthStateChanged(user => {
-    const loginLink = document.getElementById('loginLink');
-    const logoutButton = document.getElementById('logoutButton');
-    if (user) {
-        loginLink.textContent = i18next.t('logout');
-        loginLink.href = '#';
-        loginLink.onclick = logout;
-        if (logoutButton) logoutButton.style.display = 'block';
-        initPushNotifications();
-    } else {
-        loginLink.textContent = i18next.t('login');
-        loginLink.href = 'login.html';
-        loginLink.onclick = null;
-        if (logoutButton) logoutButton.style.display = 'none';
+    } catch (error) {
+        Swal.fire(i18next.t('errorSaving'), error.message, 'error');
     }
 });
 
-// Event listener untuk perubahan bahasa
-document.getElementById('languageSelect')?.addEventListener('change', (e) => {
-    i18next.changeLanguage(e.target.value, () => {
-        localStorage.setItem('language', e.target.value);
-        updateContent();
-        if (window.location.pathname.includes('index.html')) {
-            fetchTools();
-        } else if (window.location.pathname.includes('tool.html')) {
-            loadToolDetails();
-        } else if (window.location.pathname.includes('bookmarks.html')) {
-            loadBookmarks();
-        } else if (window.location.pathname.includes('login.html')) {
-            updateContent();
-        }
-    });
-});
-
-// Event listener untuk toggle tema
-document.getElementById('themeToggle')?.addEventListener('click', () => {
-    document.body.classList.toggle('dark-theme');
-    const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-    localStorage.setItem('theme', theme);
-    logThemeChanged(theme);
-});
-
-// Event listener untuk filter dan sort
-document.getElementById('categoryFilter')?.addEventListener('change', () => {
-    currentPage = 1;
-    filterAndSortTools();
-});
-document.getElementById('sortFilter')?.addEventListener('change', () => {
-    filterAndSortTools();
-});
-
-// Event listener untuk form kontak
-document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
-    await submitContactForm(name, email, message);
-    document.getElementById('contactForm').reset();
-    grecaptcha.reset();
-});
-
-// Event listener untuk form ulasan
-document.getElementById('reviewForm')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const urlParams = new URLSearchParams(window.location.search);
-    const toolId = urlParams.get('id');
-    const rating = document.getElementById('rating').value;
-    const comment = document.getElementById('comment').value;
-    await submitReview(toolId, rating, comment);
-    document.getElementById('reviewForm').reset();
-});
-
-// Event listener untuk tombol bookmark
-document.getElementById('bookmarkTool')?.addEventListener('click', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const toolId = urlParams.get('id');
-    saveBookmark(toolId);
-});
-
-// Event listener untuk autentikasi
-document.getElementById('loginButton')?.addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    await login(email, password);
-});
-
-document.getElementById('registerButton')?.addEventListener('click', async () => {
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    await register(email, password);
-});
-
-document.getElementById('logoutButton')?.addEventListener('click', logout);
-
-// Event listener untuk navigasi responsif
-document.querySelector('.nav-toggle')?.addEventListener('click', () => {
-    document.querySelector('nav').classList.toggle('active');
-});
-
-// Event listener untuk log navigasi halaman
-document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', () => {
-        const page = link.getAttribute('href').split('/').pop().split('.')[0] || 'index';
-        logPageNavigation(page);
-    });
-});
-
-// Event listener untuk log waktu interaksi
-let pageStartTime = Date.now();
-window.addEventListener('beforeunload', () => {
-    const page = window.location.pathname.split('/').pop().split('.')[0] || 'index';
-    const duration = (Date.now() - pageStartTime) / 1000;
-    logInteractionTime(page, duration);
-});
-
-// Inisialisasi tema dari localStorage
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    }
-
-    // Muat konten berdasarkan halaman
-    if (window.location.pathname.includes('index.html')) {
-        fetchTools();
-    } else if (window.location.pathname.includes('tool.html')) {
-        loadToolDetails();
-    } else if (window.location.pathname.includes('bookmarks.html')) {
-        loadBookmarks();
-    } else if (window.location.pathname.includes('login.html')) {
-        updateContent();
-    }
-
-    // Inisialisasi bahasa dari localStorage
-    const savedLang = localStorage.getItem('language') || 'id';
-    document.getElementById('languageSelect').value = savedLang;
-    i18next.changeLanguage(savedLang, updateContent);
-});
-
-// Service Worker untuk caching
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => console.log('Service Worker registered:', registration))
-            .catch(error => console.error('Service Worker registration failed:', error));
-    });
-}
+// Inisialisasi halaman
+if (document.getElementById('toolsGrid')) loadTools();
+if (document.getElementById('blogGrid')) loadBlogPosts();
+if (document.getElementById('toolName')) loadToolDetails();
+if (document.getElementById('bookmarksGrid')) loadBookmarks();
+if (document.getElementById('adminContent')) loadAdminTools();
