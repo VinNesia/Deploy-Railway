@@ -3,26 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Panel admin untuk mengelola tools AI di AI Tools Directory.">
-    <meta name="keywords" content="admin, AI tools, management">
+    <meta name="description" content="Panel Admin untuk mengelola tools dan artikel blog di AI Tools Directory.">
     <meta name="robots" content="noindex">
-    <meta property="og:title" content="Admin - AI Tools Directory">
-    <meta property="og:description" content="Kelola tools AI dan konten di AI Tools Directory.">
-    <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
-    <meta property="og:url" content="https://your-domain.com/admin.html">
-    <meta name="twitter:card" content="summary_large_image">
-    <title data-i18n="adminTitle">Admin - AI Tools Directory</title>
+    <title data-i18n="admin">Admin - AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/icon-192x192.png" type="image/png">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-XXXXXXXXXX');
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -31,10 +18,6 @@
         <div class="container">
             <div class="logo">
                 <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
-            </div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari tools AI..." data-i18n="[placeholder]searchPlaceholder" aria-label="Cari tools AI">
-                <button onclick="searchTools()" aria-label="Cari" data-i18n="searchButton">Cari</button>
             </div>
             <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
             <nav>
@@ -45,8 +28,8 @@
                     <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
                     <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
                     <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
-                    <li><a href="admin.html" class="active" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
-                    <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
+                    <li><a href="admin.html" class="active" data-i18n="admin" aria-label="Admin">Admin</a></li>
+                    <li><button id="logoutButton" style="display: none;" data-i18n="logout" aria-label="Logout">Logout</button></li>
                 </ul>
             </nav>
             <select id="languageSelect" aria-label="Pilih Bahasa">
@@ -59,44 +42,76 @@
 
     <section class="content">
         <div class="container">
-            <h1 data-i18n="adminTitle">Panel Admin</h1>
-            <p id="authMessage" style="display: none;" data-i18n="adminAccessDenied">Akses hanya untuk admin.</p>
+            <h1 data-i18n="admin">Panel Admin</h1>
+            <div id="authMessage" style="display: none;">
+                <p data-i18n="loginRequired">Silakan login sebagai admin untuk mengakses panel ini.</p>
+            </div>
             <div id="adminContent" style="display: none;">
-                <h2 data-i18n="manageTools">Kelola Tools</h2>
-                <form id="toolForm" aria-label="Formulir Manajemen Tool">
+                <h2 data-i18n="editTool">Kelola Tools</h2>
+                <form id="toolForm" aria-label="Formulir Pengelolaan Tool">
                     <input type="hidden" id="toolId">
                     <div class="form-group">
-                        <label for="toolName" data-i18n="toolNameLabel">Nama Tool:</label>
+                        <label for="toolName" data-i18n="toolName">Nama Tool:</label>
                         <input type="text" id="toolName" required aria-required="true">
                     </div>
                     <div class="form-group">
-                        <label for="toolDescription" data-i18n="toolDescriptionLabel">Deskripsi:</label>
+                        <label for="toolDescription" data-i18n="toolDescription">Deskripsi:</label>
                         <textarea id="toolDescription" required aria-required="true"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="toolCategory" data-i18n="categoryLabel">Kategori:</label>
+                        <label for="toolCategory" data-i18n="toolCategory">Kategori:</label>
                         <select id="toolCategory" required aria-required="true">
-                            <option value="productivity" data-i18n="productivity">Produktivitas</option>
-                            <option value="creativity" data-i18n="creativity">Kreativitas</option>
-                            <option value="development" data-i18n="development">Pengembangan</option>
+                            <option value="Productivity">Productivity</option>
+                            <option value="Creativity">Creativity</option>
+                            <option value="Development">Development</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="toolTags" data-i18n="tagsLabel">Tag (pisahkan dengan koma):</label>
-                        <input type="text" id="toolTags">
+                        <label for="toolTags" data-i18n="toolTags">Tag (pisahkan dengan koma):</label>
+                        <input type="text" id="toolTags" required aria-required="true">
                     </div>
                     <div class="form-group">
-                        <label for="toolUrl" data-i18n="urlLabel">URL:</label>
+                        <label for="toolUrl" data-i18n="toolUrl">URL:</label>
                         <input type="url" id="toolUrl" required aria-required="true">
                     </div>
                     <div class="form-group">
-                        <label for="toolImage" data-i18n="imageLabel">URL Gambar:</label>
+                        <label for="toolImage" data-i18n="toolImage">URL Gambar:</label>
                         <input type="url" id="toolImage">
                     </div>
-                    <button type="submit" class="btn" data-i18n="saveTool">Simpan Tool</button>
+                    <button type="submit" class="btn" data-i18n="submit">Simpan Tool</button>
                 </form>
-                <h2 data-i18n="toolsListTitle">Daftar Tools</h2>
+
+                <h2 data-i18n="blogTitle">Kelola Artikel Blog</h2>
+                <form id="blogForm" aria-label="Formulir Pengelolaan Artikel Blog">
+                    <input type="hidden" id="blogId">
+                    <div class="form-group">
+                        <label for="blogTitleInput" data-i18n="blogTitle">Judul Artikel:</label>
+                        <input type="text" id="blogTitleInput" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogDescription" data-i18n="blogDescription">Deskripsi:</label>
+                        <textarea id="blogDescription" required aria-required="true"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogBody" data-i18n="blogBody">Isi Artikel:</label>
+                        <textarea id="blogBody" required aria-required="true" style="min-height: 200px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="blogTags" data-i18n="toolTags">Tag (pisahkan dengan koma):</label>
+                        <input type="text" id="blogTags" required aria-required="true">
+                    </div>
+                    <div class="form-group">
+                        <label for="blogImage" data-i18n="toolImage">URL Gambar:</label>
+                        <input type="url" id="blogImage">
+                    </div>
+                    <button type="submit" class="btn" data-i18n="submit">Simpan Artikel</button>
+                </form>
+
+                <h2 data-i18n="toolsList">Daftar Tools</h2>
                 <div id="toolsList" class="tools-grid"></div>
+
+                <h2 data-i18n="blogPostsList">Daftar Artikel Blog</h2>
+                <div id="blogPostsList" class="blog-grid"></div>
             </div>
         </div>
     </section>
@@ -120,11 +135,8 @@
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
     <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
