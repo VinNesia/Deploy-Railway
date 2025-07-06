@@ -1,85 +1,105 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Login atau daftar ke AI Tools Directory.">
-    <meta name="robots" content="noindex">
-    <title data-i18n="login">Login - AI Tools Directory</title>
+    <meta name="description" content="Direktori AI Tools Terlengkap - Temukan alat AI untuk kebutuhan Anda!">
+    <title>AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/images/icon-192x192.png" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
+    <header class="header">
+        <div class="logo">AI Tools Directory</div>
+        <nav class="nav">
+            <ul class="nav-list">
+                <li><a href="index.html">Beranda</a></li>
+                <li><a href="tool.html">Tools</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">Tentang</a></li>
+                <li><a href="login.html">Masuk</a></li>
+            </ul>
+        </nav>
+        <div class="user-actions">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Cari AI Tools...">
+                <button onclick="searchTools()"><span class="material-icons">search</span></button>
             </div>
-            <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
-            <nav>
-                <ul>
-                    <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
-                    <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
-                    <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
-                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
-                    <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
-                    <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
-                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
-                    <li><a href="login.html" class="active" data-i18n="login" aria-label="Login">Login</a></li>
-                    <li><button id="logoutButton" style="display: none;" data-i18n="logout" aria-label="Logout">Logout</button></li>
-                </ul>
-            </nav>
-            <select id="languageSelect" aria-label="Pilih Bahasa">
-                <option value="id">Bahasa Indonesia</option>
-                <option value="en">English</option>
-            </select>
-            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang" data-i18n="themeToggle">Ganti Tema</button>
+            <a href="login.html" class="login-btn">Masuk</a>
         </div>
     </header>
 
-    <section class="content">
-        <div class="container">
-            <h1 data-i18n="login">Login / Daftar</h1>
-            <form id="loginForm" aria-label="Formulir Login">
-                <div class="form-group">
-                    <label for="email" data-i18n="email">Email:</label>
-                    <input type="email" id="email" required aria-required="true">
+    <main class="main-content">
+        <section class="hero">
+            <h1>Temukan AI Tools Terbaik</h1>
+            <p>Jelajahi ribuan alat AI untuk meningkatkan produktivitas Anda.</p>
+            <button class="explore-btn" onclick="loadTools()">Jelajahi Sekarang</button>
+        </section>
+        <section class="tools-section">
+            <div class="section-header">
+                <h2>AI Tools Terpopuler</h2>
+                <div class="filter-bar">
+                    <select id="categoryFilter">
+                        <option value="">Semua Kategori</option>
+                        <option value="design">Desain</option>
+                        <option value="writing">Penulisan</option>
+                        <option value="data">Analisis Data</option>
+                    </select>
+                    <button onclick="filterTools()">Terapkan</button>
                 </div>
-                <div class="form-group">
-                    <label for="password" data-i18n="password">Kata Sandi:</label>
-                    <input type="password" id="password" required aria-required="true">
+            </div>
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Tools akan dimuat dinamis oleh script.js -->
+                <div class="tool-card">
+                    <img src="https://via.placeholder.com/250x150" alt="Tool Image">
+                    <h3>AI Writer</h3>
+                    <p>Alat penulisan AI canggih untuk konten kreatif.</p>
+                    <span class="rating">★★★★☆ (4.2)</span>
                 </div>
-                <p id="authError" class="error" style="display: none;"></p>
-                <button type="submit" id="loginButton" class="btn" data-i18n="login">Login</button>
-                <button type="button" id="registerButton" class="btn" data-i18n="register">Daftar</button>
-            </form>
-        </div>
-    </section>
+                <div class="tool-card">
+                    <img src="https://via.placeholder.com/250x150" alt="Tool Image">
+                    <h3>Design Pro</h3>
+                    <p>Tool desain AI untuk grafis profesional.</p>
+                    <span class="rating">★★★★☆ (4.5)</span>
+                </div>
+                <!-- Tambahan card akan dimuat dinamis -->
+            </div>
+            <div id="pagination" class="pagination">
+                <button onclick="prevPage()">Sebelumnya</button>
+                <span id="pageInfo">Halaman 1</span>
+                <button onclick="nextPage()">Berikutnya</button>
+            </div>
+        </section>
+    </main>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
-            <div class="footer-links">
-                <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
-                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
-                <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
-                <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
-                <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>AI Tools Directory</h3>
+                <p>Temukan alat AI terbaik untuk kebutuhan Anda.</p>
             </div>
-            <div class="contact-info">
-                <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
-                <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
-                <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
+            <div class="footer-section">
+                <h3>Link Cepat</h3>
+                <ul>
+                    <li><a href="about.html">Tentang Kami</a></li>
+                    <li><a href="privacy.html">Privasi</a></li>
+                    <li><a href="terms.html">Syarat</a></li>
+                    <li><a href="contact.html">Kontak</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Sosial Media</h3>
+                <div class="social-icons">
+                    <a href="#" class="icon"><span class="material-icons">twitter</span></a>
+                    <a href="#" class="icon"><span class="material-icons">facebook</span></a>
+                    <a href="#" class="icon"><span class="material-icons">linkedin</span></a>
+                </div>
             </div>
         </div>
+        <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
     </footer>
 
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
     <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
