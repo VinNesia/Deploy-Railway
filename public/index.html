@@ -19,14 +19,26 @@
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="about.html">Tentang</a></li>
                 <li><a href="login.html">Masuk</a></li>
+                <li><a href="admin.html">Admin</a></li>
             </ul>
         </nav>
         <div class="user-actions">
             <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari AI Tools...">
+                <input type="text" id="searchInput" placeholder="Cari AI Tools (contoh: design, writer)...">
+                <select id="categoryFilter">
+                    <option value="">Semua Kategori</option>
+                    <option value="design">Desain</option>
+                    <option value="writing">Penulisan</option>
+                    <option value="data">Analisis Data</option>
+                </select>
                 <button onclick="searchTools()"><span class="material-icons">search</span></button>
             </div>
-            <a href="login.html" class="login-btn">Masuk</a>
+            <a href="login.html" class="login-btn" id="loginBtn">Masuk</a>
+            <a href="bookmarks.html" class="login-btn" id="bookmarksBtn" style="display: none;">Bookmark</a>
+            <label class="dark-mode-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
         </div>
     </header>
 
@@ -36,11 +48,15 @@
             <p>Jelajahi ribuan alat AI untuk meningkatkan produktivitas Anda.</p>
             <button class="explore-btn" onclick="loadTools()">Jelajahi Sekarang</button>
         </section>
+        <section class="recommended-section">
+            <h2>Recommended Tools</h2>
+            <div class="tools-grid" id="recommendedGrid"></div>
+        </section>
         <section class="tools-section">
             <div class="section-header">
                 <h2>AI Tools Terpopuler</h2>
                 <div class="filter-bar">
-                    <select id="categoryFilter">
+                    <select id="categoryFilterTools">
                         <option value="">Semua Kategori</option>
                         <option value="design">Desain</option>
                         <option value="writing">Penulisan</option>
@@ -49,20 +65,7 @@
                     <button onclick="filterTools()">Terapkan</button>
                 </div>
             </div>
-            <div class="tools-grid" id="toolsGrid">
-                <div class="tool-card">
-                    <img src="https://via.placeholder.com/250x150" alt="Tool Image">
-                    <h3>AI Writer</h3>
-                    <p>Alat penulisan AI canggih untuk konten kreatif.</p>
-                    <span class="rating">★★★★☆ (4.2)</span>
-                </div>
-                <div class="tool-card">
-                    <img src="https://via.placeholder.com/250x150" alt="Tool Image">
-                    <h3>Design Pro</h3>
-                    <p>Tool desain AI untuk grafis profesional.</p>
-                    <span class="rating">★★★★☆ (4.5)</span>
-                </div>
-            </div>
+            <div class="tools-grid" id="toolsGrid"></div>
             <div id="pagination" class="pagination">
                 <button onclick="prevPage()">Sebelumnya</button>
                 <span id="pageInfo">Halaman 1</span>
@@ -98,7 +101,12 @@
         <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
     </footer>
 
-    <script src="firebase-config.js"></script>
+    <div id="notification" class="notification"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-analytics.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
