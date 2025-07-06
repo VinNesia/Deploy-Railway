@@ -4,8 +4,8 @@
     "description": "Jelajahi koleksi tools AI terbaik untuk produktivitas, kreativitas, dan pengembangan.",
     "start_url": "/index.html",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#1a73e8",
+    "background_color": "#f4f4f4",
+    "theme_color": "#007bff",
     "icons": [
         {
             "src": "/images/icon-192x192.png",
@@ -16,13 +16,6 @@
             "src": "/images/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
-        }
-    ],
-    "scope": "/",
-    "related_applications": [
-        {
-            "platform": "web",
-            "url": "https://your-domain.com/blog.html"
         }
     ]
 }
