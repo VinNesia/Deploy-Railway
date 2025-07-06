@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="keywords" content="AI tools, tool details, free AI tools">
+    <meta name="description" content="Detail tools AI di AI Tools Directory.">
+    <meta name="keywords" content="AI tools, tool details, reviews">
     <meta name="robots" content="index, follow">
-    <meta property="og:title" content="">
-    <meta property="og:description" content="">
-    <meta property="og:image" content="">
-    <meta property="og:url" content="">
+    <meta property="og:title" content="Detail Tool - AI Tools Directory">
+    <meta property="og:description" content="Lihat detail lengkap dan ulasan pengguna untuk tool AI ini.">
+    <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
+    <meta property="og:url" content="https://your-domain.com/tool.html">
     <meta name="twitter:card" content="summary_large_image">
-    <title data-i18n="toolTitle">Detail Tool - AI Tools Directory</title>
+    <title data-i18n="toolDetails">Detail Tool - AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
@@ -32,72 +32,86 @@
             <div class="logo">
                 <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
             </div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari tools AI..." data-i18n    	    
-    </div>
-</header>
-<section class="content">
-    <div class="container">
-        <h1 data-i18n="toolTitle">Detail Tool</h1>
-        <div id="loading" style="display: none; text-align: center; padding: 20px;">
-            <p data-i18n="loading">Memuat...</p>
+            <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" data-i18n="home" aria-label="Beranda">Beranda</a></li>
+                    <li><a href="index.html#tools" data-i18n="catalog" aria-label="Katalog Tools">Katalog</a></li>
+                    <li><a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a></li>
+                    <li><a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a></li>
+                    <li><a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a></li>
+                    <li><a href="bookmarks.html" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
+                    <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
+                    <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
+                    <li><button id="logoutButton" style="display: none;" data-i18n="logout" aria-label="Logout">Logout</button></li>
+                </ul>
+            </nav>
+            <select id="languageSelect" aria-label="Pilih Bahasa">
+                <option value="id">Bahasa Indonesia</option>
+                <option value="en">English</option>
+            </select>
+            <button id="themeToggle" aria-label="Toggle Tema Gelap/Terang" data-i18n="themeToggle">Ganti Tema</button>
         </div>
-        <div class="tool-details">
-            <h2 id="toolName"></h2>
+    </header>
+
+    <section class="content">
+        <div class="container">
+            <div id="loading" style="display: none; text-align: center; padding: 20px;">
+                <p data-i18n="loading">Memuat...</p>
+            </div>
+            <h1 id="toolName"></h1>
             <img id="toolImage" src="" alt="" loading="lazy">
             <p id="toolDescription"></p>
-            <p id="toolCategory" class="tag"></p>
+            <p id="toolCategory"></p>
             <p id="toolRating"></p>
-            <a id="toolLink" href="#" target="_blank" class="btn" data-i18n="visitTool">Kunjungi</a>
-            <button id="bookmarkTool" class="btn" data-i18n="bookmarkTool">Simpan</button>
-            <button id="shareTool" class="btn share-btn" data-i18n="shareTool">Bagikan</button>
+            <a id="toolLink" href="#" target="_blank" class="btn" data-i18n="visitTool">Kunjungi Tool</a>
+            <button id="bookmarkTool" class="btn" data-i18n="bookmarkTool">Tambah Bookmark</button>
+            <h2 data-i18n="reviews">Ulasan</h2>
+            <div id="reviewsList"></div>
+            <h3 data-i18n="addReview">Tambah Ulasan</h3>
+            <form id="reviewForm" aria-label="Formulir Ulasan">
+                <div class="form-group">
+                    <label for="rating" data-i18n="rating">Rating:</label>
+                    <select id="rating" required aria-required="true">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="comment" data-i18n="comment">Komentar:</label>
+                    <textarea id="comment" required aria-required="true"></textarea>
+                </div>
+                <p id="reviewError" class="error" style="display: none;"></p>
+                <button type="submit" class="btn" data-i18n="submitReview">Kirim Ulasan</button>
+            </form>
         </div>
-        <h3 data-i18n="reviewTitle">Ulasan</h3>
-        <div id="reviewsList"></div>
-        <form id="reviewForm" aria-label="Formulir Ulasan">
-            <div class="form-group">
-                <label for="rating" data-i18n="ratingLabel">Rating:</label>
-                <select id="rating" required aria-required="true">
-                    <option value="5">5</option>
-                    <option value="4">4</option>
-                    <option value="3">3</option>
-                    <option value="2">2</option>
-                    <option value="1">1</option>
-                </select>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
+            <div class="footer-links">
+                <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
+                <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
+                <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
+                <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
+                <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
             </div>
-            <div class="form-group">
-                <label for="comment" data-i18n="commentLabel">Ulasan:</label>
-                <textarea id="comment" required aria-required="true"></textarea>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
+                <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
+                <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
             </div>
-            <p id="reviewError" class="error" style="display: none;"></p>
-            <button type="submit" class="btn" data-i18n="submitReview">Kirim Ulasan</button>
-        </form>
-    </div>
-</section>
-<footer>
-    <div class="container">
-        <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
-        <div class="footer-links">
-            <a href="about.html" data-i18n="about" aria-label="Tentang Kami">Tentang Kami</a>
-            <a href="blog.html" data-i18n="blog" aria-label="Blog">Blog</a>
-            <a href="privacy.html" data-i18n="privacy" aria-label="Kebijakan Privasi">Kebijakan Privasi</a>
-            <a href="terms.html" data-i18n="terms" aria-label="Syarat & Ketentuan">Syarat & Ketentuan</a>
-            <a href="contact.html" data-i18n="contact" aria-label="Kontak">Kontak</a>
         </div>
-        <div class="contact-info">
-            <p>Email: <a href="mailto:vin.nesia.id@gmail.com">vin.nesia.id@gmail.com</a></p>
-            <p>Instagram: <a href="https://instagram.com/vin.nesia.id" target="_blank">vin.nesia.id</a></p>
-            <p>WhatsApp: <a href="https://wa.me/+62895354511777" target="_blank">+62 895 3545 11777</a></p>
-        </div>
-    </div>
-</footer>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
-<script src="firebase-config.js"></script>
-<script src="script.js"></script>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
