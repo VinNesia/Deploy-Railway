@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Lihat bookmark tools AI favorit Anda di AI Tools Directory.">
-    <meta name="keywords" content="AI tools, bookmarks, saved tools">
+    <meta name="description" content="Lihat bookmark tools AI Anda di AI Tools Directory.">
     <meta name="robots" content="noindex">
-    <meta property="og:title" content="Bookmark - AI Tools Directory">
-    <meta property="og:description" content="Kelola tools AI favorit Anda yang telah disimpan.">
-    <meta property="og:image" content="https://your-domain.com/images/og-image.webp">
-    <meta property="og:url" content="https://your-domain.com/bookmarks.html">
-    <meta name="twitter:card" content="summary_large_image">
-    <title data-i18n="bookmarksTitle">Bookmark - AI Tools Directory</title>
+    <title data-i18n="bookmarks">Bookmark - AI Tools Directory</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="manifest" href="/manifest.json">
@@ -32,10 +26,6 @@
             <div class="logo">
                 <a href="index.html" aria-label="AI Tools Directory Beranda">AI Tools Directory</a>
             </div>
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari tools AI..." data-i18n="[placeholder]searchPlaceholder" aria-label="Cari tools AI">
-                <button onclick="searchTools()" aria-label="Cari" data-i18n="searchButton">Cari</button>
-            </div>
             <div class="nav-toggle" aria-label="Toggle Navigasi">☰</div>
             <nav>
                 <ul>
@@ -47,6 +37,7 @@
                     <li><a href="bookmarks.html" class="active" data-i18n="bookmarks" aria-label="Bookmark">Bookmark</a></li>
                     <li><a href="admin.html" id="adminLink" style="display: none;" data-i18n="admin" aria-label="Admin">Admin</a></li>
                     <li><a href="login.html" id="loginLink" data-i18n="login" aria-label="Login">Login</a></li>
+                    <li><button id="logoutButton" style="display: none;" data-i18n="logout" aria-label="Logout">Logout</button></li>
                 </ul>
             </nav>
             <select id="languageSelect" aria-label="Pilih Bahasa">
@@ -59,7 +50,7 @@
 
     <section class="content">
         <div class="container">
-            <h1 data-i18n="bookmarksTitle">Bookmark Saya</h1>
+            <h1 data-i18n="bookmarks">Bookmark</h1>
             <div id="loading" style="display: none; text-align: center; padding: 20px;">
                 <p data-i18n="loading">Memuat...</p>
             </div>
@@ -86,11 +77,8 @@
     </footer>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
     <script src="firebase-config.js"></script>
     <script src="script.js"></script>
 </body>
