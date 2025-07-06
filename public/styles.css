@@ -10,6 +10,71 @@ body {
     background-color: #f5f9ff;
     color: #333;
     line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+body.dark-mode a {
+    color: #a3bffa;
+}
+
+body.dark-mode .login-btn:hover {
+    background-color: #4b6cb7;
+}
+
+body.dark-mode .explore-btn:hover {
+    background-color: #4b6cb7;
+}
+
+body.dark-mode .filter-bar button:hover {
+    background-color: #4b6cb7;
+}
+
+body.dark-mode .pagination button:hover {
+    background-color: #4b6cb7;
+}
+
+body.dark-mode .tool-card {
+    background-color: #2d2d2d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .hero,
+body.dark-mode .recommended-section,
+body.dark-mode .login-card {
+    background-color: #2d2d2d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .hero h1,
+body.dark-mode .recommended-section h2,
+body.dark-mode .tools-section h2 {
+    color: #a3bffa;
+}
+
+body.dark-mode .tool-card h3 {
+    color: #a3bffa;
+}
+
+body.dark-mode .tool-card p,
+body.dark-mode .tool-card .rating {
+    color: #b0b0b0;
+}
+
+body.dark-mode .footer {
+    background-color: #121212;
+}
+
+body.dark-mode .footer a {
+    color: #a3bffa;
+}
+
+body.dark-mode .footer-copyright {
+    color: #b0b0b0;
 }
 
 /* Header */
@@ -24,6 +89,11 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    transition: background-color 0.3s;
+}
+
+.header.dark-mode {
+    background-color: #152160;
 }
 
 .logo {
@@ -64,6 +134,13 @@ body {
     border: none;
     border-radius: 4px 0 0 4px;
     font-size: 0.9rem;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .search-bar input {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
 }
 
 .search-bar select {
@@ -71,6 +148,14 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px 0 0 4px;
     font-size: 0.9rem;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .search-bar select {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
+    border-color: #555;
 }
 
 .search-bar button {
@@ -81,6 +166,7 @@ body {
     border-radius: 0 4px 4px 0;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: background-color 0.3s;
 }
 
 .search-bar button:hover {
@@ -100,11 +186,57 @@ body {
     background-color: #2563eb;
 }
 
+.dark-mode-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.dark-mode-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
 /* Main Content */
 .main-content {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    transition: background-color 0.3s;
 }
 
 .hero {
@@ -114,6 +246,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .hero h1 {
@@ -137,6 +270,7 @@ body {
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s;
+    animation: slideUp 0.5s ease-out;
 }
 
 .explore-btn:hover {
@@ -149,6 +283,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .recommended-section h2 {
@@ -180,6 +315,15 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 0.9rem;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .filter-bar select,
+body.dark-mode .filter-bar button {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
+    border-color: #555;
 }
 
 .filter-bar button {
@@ -198,6 +342,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+    animation: fadeInUp 0.5s ease-out;
 }
 
 .tool-card {
@@ -205,11 +350,13 @@ body {
     padding: 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .tool-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .tool-card img {
@@ -239,6 +386,7 @@ body {
 
 .pagination {
     text-align: center;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .pagination button {
@@ -250,6 +398,7 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: background-color 0.3s;
 }
 
 .pagination button:hover {
@@ -273,6 +422,7 @@ body {
     width: 100%;
     max-width: 400px;
     text-align: center;
+    animation: fadeIn 0.5s ease-in;
 }
 
 .login-card h2 {
@@ -299,6 +449,14 @@ body {
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 0.9rem;
+    background-color: #fff;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode .form-group input {
+    background-color: #3d3d3d;
+    color: #e0e0e0;
+    border-color: #555;
 }
 
 .login-btn {
@@ -360,12 +518,24 @@ body {
     text-align: center;
 }
 
+.success-message {
+    color: #28a745;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
 /* Footer */
 .footer {
     background-color: #1e3a8a;
     color: white;
     padding: 2rem 0;
     margin-top: 2rem;
+    transition: background-color 0.3s;
+}
+
+.footer.dark-mode {
+    background-color: #121212;
 }
 
 .footer-content {
@@ -420,6 +590,51 @@ body {
     text-align: center;
     margin-top: 1rem;
     font-size: 0.9rem;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #333;
+    color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+    animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-out 3s forwards;
+}
+
+.notification.show {
+    display: block;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 /* Responsive Design */
