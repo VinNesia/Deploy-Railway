@@ -1,114 +1,170 @@
 <!DOCTYPE html>
-<html lang="id" dir="ltr">
+<html lang="id" dir="ltr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Direktori AI Tools Terlengkap - Temukan alat AI untuk kebutuhan Anda!">
+    <meta name="description" content="Direktori AI Tools Terlengkap - Temukan alat AI untuk meningkatkan produktivitas Anda!">
+    <meta name="keywords" content="AI Tools, Artificial Intelligence, Productivity, Research, Image Generation">
+    <meta name="author" content="AI Tools Directory">
+    <meta property="og:title" content="AI Tools Directory">
+    <meta property="og:description" content="Jelajahi ribuan alat AI untuk kebutuhan Anda!">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=AI+Tools+Directory">
+    <meta property="og:url" content="https://aitoolsdirectory.com">
+    <meta name="twitter:card" content="summary_large_image">
     <title>AI Tools Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
-<body>
-    <header class="header">
-        <div class="logo">AI Tools Directory</div>
-        <nav class="nav">
-            <ul class="nav-list">
-                <li><a href="index.html">Beranda</a></li>
-                <li><a href="tool.html">Tools</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="about.html">Tentang</a></li>
-                <li><a href="login.html">Masuk</a></li>
-                <li><a href="admin.html">Admin</a></li>
+<body class="bg-gray-900 text-white font-inter transition-colors duration-300" x-data="app" x-init="init()">
+    <!-- Spotlight Section -->
+    <div class="w-full bg-blue-600 text-white py-2 overflow-hidden">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">Berita: Rilis baru Midjourney v6!</div>
+                <div class="swiper-slide">Update: ChatGPT kini lebih cerdas!</div>
+                <div class="swiper-slide">Tren: AI Video naik 50% di 2025!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header fixed top-0 left-0 w-full bg-gray-800 shadow-lg z-50 flex items-center justify-between p-4">
+        <div class="logo text-2xl font-bold text-white">AI Tools Directory</div>
+        <nav class="nav relative">
+            <div class="hamburger cursor-pointer text-white text-3xl md:hidden" @click="open = !open">
+                <span class="material-icons">menu</span>
+            </div>
+            <ul class="nav-list flex-col md:flex-row gap-4 absolute md:static bg-gray-800 md:bg-transparent top-full left-0 w-full md:w-auto p-4 md:p-0 transition-all duration-300" :class="open ? 'flex' : 'hidden md:flex'">
+                <li><a href="index.html" class="hover:text-blue-400">Beranda</a></li>
+                <li><a href="tool.html" class="hover:text-blue-400">Tools</a></li>
+                <li><a href="blog.html" class="hover:text-blue-400">Blog</a></li>
+                <li><a href="about.html" class="hover:text-blue-400">Tentang</a></li>
             </ul>
         </nav>
-        <div class="user-actions">
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="Cari AI Tools (contoh: design, writer)...">
-                <select id="categoryFilter">
-                    <option value="">Semua Kategori</option>
-                    <option value="research">Research</option>
-                    <option value="image">Image</option>
-                    <option value="copywriting">Copywriting</option>
-                    <option value="video">Video</option>
-                </select>
-                <button onclick="searchTools()"><span class="material-icons">search</span></button>
+        <div class="user-actions flex items-center gap-2">
+            <div class="search-bar flex items-center bg-gray-700 rounded-full p-2 w-full md:w-96">
+                <input type="text" id="searchInput" placeholder="Cari AI Tools..." class="bg-transparent text-white outline-none w-full pr-2">
+                <button onclick="searchTools()" class="text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1116.65 16.65z"></path>
+                    </svg>
+                </button>
             </div>
-            <a href="login.html" class="login-btn" id="loginBtn">Masuk</a>
-            <a href="bookmarks.html" class="login-btn" id="bookmarksBtn" style="display: none;">Bookmark</a>
-            <label class="dark-mode-switch">
-                <input type="checkbox" id="darkModeToggle">
-                <span class="slider"></span>
+            <a href="login.html" class="login-btn bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full">Masuk</a>
+            <a href="signup.html" class="login-btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full">Daftar</a>
+            <label class="dark-mode-switch relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="darkModeToggle" x-model="darkMode" class="sr-only" @click="toggleDarkMode()">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            </label>
+            <label class="free-mode-switch relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="freeModeToggle" x-model="freeMode" class="sr-only" @click="toggleFreeMode()">
+                <div class="w-11 h-6 bg-gray-200 rounded-full peer-checked:bg-green-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
             </label>
         </div>
     </header>
 
-    <main class="main-content">
-        <section class="hero">
-            <h1>Temukan AI Tools Terbaik</h1>
-            <p>Jelajahi ribuan alat AI untuk meningkatkan produktivitas Anda.</p>
-            <button class="explore-btn" onclick="loadTools()">Jelajahi Sekarang</button>
+    <main class="main-content mt-20 p-4 max-w-7xl mx-auto">
+        <section class="hero text-center mb-8">
+            <h1 class="text-4xl font-bold mb-4">Temukan AI Tools Terbaik</h1>
+            <p class="text-lg mb-6">Jelajahi ribuan alat AI untuk meningkatkan produktivitas Anda.</p>
+            <button class="explore-btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold">Jelajahi Sekarang</button>
         </section>
-        <section class="recommended-section">
-            <h2>Recommended Tools</h2>
-            <div class="tools-grid" id="recommendedGrid"></div>
+
+        <section class="recommended-section mb-8">
+            <h2 class="text-3xl font-bold mb-4 text-center">Recommended Tools</h2>
+            <div class="tools-flex flex flex-wrap gap-4" id="recommendedGrid"></div>
         </section>
-        <section class="tools-section">
-            <div class="section-header">
-                <h2>AI Tools Directory</h2>
-                <div class="filter-bar">
-                    <select id="categoryFilterTools">
-                        <option value="">Semua Kategori</option>
-                        <option value="research">Research</option>
-                        <option value="image">Image</option>
-                        <option value="copywriting">Copywriting</option>
-                        <option value="video">Video</option>
-                    </select>
-                    <button onclick="filterTools()">Terapkan</button>
+
+        <section class="tools-section mb-8">
+            <div class="section-header flex justify-between items-center mb-4">
+                <h2 class="text-3xl font-bold">AI Tools Directory</h2>
+                <div class="tab-filter space-x-2">
+                    <button class="tab bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-full" onclick="filterByTab('latest')">Latest</button>
+                    <button class="tab bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-full" onclick="filterByTab('forYou')">For You</button>
+                    <button class="tab bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-full" onclick="filterByTab('trending')">Trending</button>
                 </div>
             </div>
-            <div class="tools-grid" id="toolsGrid"></div>
-            <div id="pagination" class="pagination">
-                <button onclick="prevPage()">Sebelumnya</button>
-                <span id="pageInfo">Halaman 1</span>
-                <button onclick="nextPage()">Berikutnya</button>
+            <div class="category-tags flex flex-wrap gap-2 mb-4">
+                <button class="badge bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full" onclick="filterByCategory('all')">All</button>
+                <button class="badge bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full" onclick="filterByCategory('research')">Research</button>
+                <button class="badge bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full" onclick="filterByCategory('image')">Image</button>
+                <button class="badge bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full" onclick="filterByCategory('copywriting')">Copywriting</button>
+                <button class="badge bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-full" onclick="filterByCategory('video')">Video</button>
             </div>
+            <div class="tools-flex flex flex-wrap gap-4" id="toolsGrid"></div>
+            <div id="pagination" class="pagination text-center mt-4">
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full" onclick="prevPage()">Sebelumnya</button>
+                <span id="pageInfo" class="mx-4">Halaman 1</span>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full" onclick="nextPage()">Berikutnya</button>
+            </div>
+        </section>
+
+        <section class="just-released-section mb-8">
+            <h2 class="text-3xl font-bold mb-4">Just Released</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="justReleasedGrid"></div>
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="footer-content">
+    <footer class="footer bg-gray-800 text-white p-6 mt-8">
+        <div class="footer-content max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-6">
             <div class="footer-section">
-                <h3>AI Tools Directory</h3>
+                <h3 class="text-xl font-bold mb-2">AI Tools Directory</h3>
                 <p>Temukan alat AI terbaik untuk kebutuhan Anda.</p>
             </div>
             <div class="footer-section">
-                <h3>Link Cepat</h3>
-                <ul>
-                    <li><a href="about.html">Tentang Kami</a></li>
-                    <li><a href="privacy.html">Privasi</a></li>
-                    <li><a href="terms.html">Syarat</a></li>
-                    <li><a href="contact.html">Kontak</a></li>
+                <h3 class="text-xl font-bold mb-2">Link Cepat</h3>
+                <ul class="space-y-1">
+                    <li><a href="about.html" class="hover:text-blue-400">Tentang Kami</a></li>
+                    <li><a href="privacy.html" class="hover:text-blue-400">Privasi</a></li>
+                    <li><a href="terms.html" class="hover:text-blue-400">Syarat</a></li>
+                    <li><a href="contact.html" class="hover:text-blue-400">Kontak</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h3>Sosial Media</h3>
-                <div class="social-icons">
-                    <a href="#" class="icon"><span class="material-icons">twitter</span></a>
-                    <a href="#" class="icon"><span class="material-icons">facebook</span></a>
-                    <a href="#" class="icon"><span class="material-icons">linkedin</span></a>
+                <h3 class="text-xl font-bold mb-2">Sosial Media</h3>
+                <div class="social-icons flex gap-4">
+                    <a href="#" class="hover:text-blue-400">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-2.717 0-4.92 2.203-4.92 4.917 0 .386.045.762.127 1.124C7.691 8.094 4.066 6.13 1.64 3.161c-.427.732-.666 1.585-.666 2.475 0 1.71.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.061c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.314 0-.615-.03-.916-.086.631 1.953 2.445 3.377 4.604 3.417-1.68 1.319-3.809 2.105-6.102 2.105-.396 0-.788-.023-1.175-.068 2.187 1.405 4.808 2.212 7.615 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="hover:text-blue-400">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.317 3.608 1.292.975.975 1.23 2.242 1.292 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.317 2.633-1.292 3.608-.975.975-2.242 1.23-3.608 1.292-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.317-3.608-1.292-.975-.975-1.23-2.242-1.292-3.608-.058-1.266-.07-1.646-.07-4.85s.012-3.584.07-4.85c.062-1.366.317-2.633 1.292-3.608.975-.975 2.242-1.23 3.608-1.292 1.266-.058 1.646-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.314.059-2.593.326-3.563.896-1.2.694-2.22 1.714-2.914 2.914-.57.97-.837 2.249-.896 3.563-.058 1.28-.072 1.688-.072 4.947s.014 3.667.072 4.947c.059 1.314.326 2.593.896 3.563.694 1.2 1.714 2.22 2.914 2.914 1.97.57 2.249.837 3.563.896 1.28.058 1.688.072 4.947.072s3.667-.014 4.947-.072c1.314-.059 2.593-.326 3.563-.896 1.2-.694 2.22-1.714 2.914-2.914.57-.97.837-2.249.896-3.563.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.059-1.314-.326-2.593-.896-3.563-.694-1.2-1.714-2.22-2.914-2.914-.97-.57-2.249-.837-3.563-.896-1.28-.058-1.688-.072-4.947-.072zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441-.645-1.441-1.44s.645-1.441 1.441-1.441c.796 0 1.441.645 1.441 1.441s-.645 1.44-1.441 1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="hover:text-blue-400">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-1.337-.255-2.396-1.858-2.396-1.603 0-1.852 1.25-1.852 2.536v5.464h-3v-11h2.881v1.578h-.041c.401-.761 1.381-1.858 3.124-1.858 3.3 0 3.906 2.176 3.906 5.008v5.272z"/>
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
-        <p class="footer-copyright">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
+        <p class="footer-copyright text-center mt-4">© 2025 AI Tools Directory. Semua hak dilindungi.</p>
     </footer>
 
-    <div id="notification" class="notification"></div>
+    <div id="notification" class="notification fixed top-4 right-4 bg-gray-800 text-white p-3 rounded-lg shadow-lg z-50 hidden" x-show="showNotification" x-transition></div>
 
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-analytics.js"></script>
     <script src="script.js"></script>
+    <script>
+        var swiper = new Swiper('.mySwiper', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+        });
+    </script>
 </body>
 </html>
