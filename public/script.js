@@ -19,6 +19,21 @@ let currentPage = 1;
 const toolsPerPage = 6;
 let toolsData = [];
 
+// Dark Mode
+const darkModeToggle = document.getElementById('darkModeToggle');
+darkModeToggle.addEventListener('change', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+    }
+});
+
 // Autentikasi
 auth.onAuthStateChanged((user) => {
     const loginBtn = document.getElementById('loginBtn');
@@ -26,6 +41,7 @@ auth.onAuthStateChanged((user) => {
     if (user) {
         loginBtn.style.display = 'none';
         bookmarksBtn.style.display = 'inline-block';
+        showNotification('Login berhasil!');
     } else {
         loginBtn.style.display = 'inline-block';
         bookmarksBtn.style.display = 'none';
@@ -72,12 +88,12 @@ async function loadTools() {
     }
 }
 
-// Rekomendasi Tools
+// Rekomendasi Tools (Random)
 function displayRecommendedTools() {
     const recommendedGrid = document.getElementById('recommendedGrid');
     recommendedGrid.innerHTML = '';
-    const sortedTools = [...toolsData].sort((a, b) => b.views - a.views).slice(0, 3);
-    sortedTools.forEach(tool => {
+    const shuffledTools = toolsData.sort(() => 0.5 - Math.random()).slice(0, 3);
+    shuffledTools.forEach(tool => {
         const toolCard = document.createElement('div');
         toolCard.className = 'tool-card';
         toolCard.innerHTML = `
@@ -151,7 +167,7 @@ function searchTools() {
     }
     currentPage = 1;
     displayTools(filteredTools);
-    displayRecommendedTools(filteredTools.slice(0, 3));
+    displayRecommendedTools();
 }
 
 function filterTools() {
@@ -164,7 +180,7 @@ function filterTools() {
     displayTools(filteredTools);
 }
 
-// Bookmark Per User
+// Bookmark Cloud (Firebase)
 function addBookmark(toolId) {
     const user = auth.currentUser;
     if (user) {
@@ -172,13 +188,23 @@ function addBookmark(toolId) {
             toolId,
             timestamp: new Date().toISOString()
         }).then(() => {
-            alert('Tool ditambahkan ke bookmark!');
+            showNotification('Tool ditambahkan ke bookmark!');
         }).catch(error => {
             console.error('Error adding bookmark:', error);
         });
     } else {
-        alert('Silakan login terlebih dahulu!');
+        showNotification('Silakan login terlebih dahulu!', 'error');
     }
+}
+
+// Notifikasi Pop-up
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type === 'error' ? 'error' : 'success'} show`;
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3500);
 }
 
 // Kontak Form
@@ -194,12 +220,13 @@ document.getElementById('contactForm')?.addEventListener('submit', (e) => {
         message,
         timestamp: new Date().toISOString()
     }).then(() => {
-        document.getElementById('contactSuccess').textContent = 'Pesan berhasil dikirim!';
+        document.getElementById('contactSuccess').textContent = '';
+        showNotification('Pesan berhasil dikirim!');
         document.getElementById('contactForm').reset();
     }).catch((error) => {
-        document.getElementById('contactSuccess').textContent = 'Terjadi kesalahan: ' + error.message;
+        showNotification('Terjadi kesalahan: ' + error.message, 'error');
     });
-});
+}
 
 // Muat saat halaman dimuat
 window.onload = () => {
