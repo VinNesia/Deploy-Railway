@@ -11,8 +11,7 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/icon-192x192.png" type="image/png">
     <script src="https://cdn.jsdelivr.net/npm/i18next@21.9.2/dist/umd/i18next.min.js"></script>
-    <script src="/locales/id.json"></script>
-    <script src="/locales/en.json"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <header>
@@ -22,6 +21,7 @@
             </div>
         </div>
     </header>
+
     <section class="content">
         <div class="container">
             <h1 data-i18n="offlineTitle">Anda Offline</h1>
@@ -29,24 +29,11 @@
             <a href="index.html" class="btn" data-i18n="backToHome">Kembali ke Beranda</a>
         </div>
     </section>
+
     <footer>
         <div class="container">
             <p>© 2025 AI Tools Directory. <span data-i18n="footerRights">Semua hak dilindungi.</span></p>
         </div>
     </footer>
-    <script>
-        i18next.init({
-            lng: localStorage.getItem('language') || 'id',
-            resources: {
-                id: { translation: idTranslations },
-                en: { translation: enTranslations }
-            }
-        }, function(err, t) {
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                element.textContent = i18next.t(key);
-            });
-        });
-    </script>
 </body>
 </html>
